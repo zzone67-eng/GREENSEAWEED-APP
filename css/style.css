@@ -3502,3 +3502,9 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .x-sm-company,.x-sm-idea{position:absolute;left:13.3%;right:9%;font-family:var(--gs-font);color:#1a1c1a;letter-spacing:-.01em;overflow:hidden}
 .x-sm-company{top:30.2%;font-size:4cqw;line-height:1.5;white-space:nowrap;text-overflow:ellipsis;font-weight:500}
 .x-sm-idea{top:45.8%;font-size:3.9cqw;line-height:1.75;max-height:10%;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+/* round 4 */
+.hq-esg-wrap{height:232px!important;clip-path:inset(110px 0 0 10px round 0 0 0 14px)}
+.hq-team{clip-path:inset(12.9% 0 0 0)}
+.m3-switch:not(.on){border-width:1.5px;border-color:#cfd3cf;background:#f4f5f4}
+.m3-switch:not(.on) i{width:14px;height:14px;margin-top:-7px;left:7px;background:#c3c7c3}
+.team-new-achievement.toast-only .team-new-toast{top:-300px!important}
