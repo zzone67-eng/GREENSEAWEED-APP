@@ -3570,7 +3570,7 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .team-bonus-label.x-rip-host,.tl-info.x-rip-host,.modal-submit-visible.x-rip-host,.esg-propose-fixed.x-rip-host{position:absolute!important}
 /* ESG case carousel: only the current card is shown (no clipped neighbour slivers) */
 .esg-case-slide{transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s ease!important}
-.esg-case-slide[style*="z-index: 2"]{opacity:0!important}
+
 
 /* ===== app-like navigation & surfaces ===== */
 .x-ghost{position:absolute!important;inset:0;pointer-events:none;overflow:hidden;background:#fff}
@@ -3665,3 +3665,7 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .x-steps li.on span{color:var(--primary-text);font-weight:700}
 .x-mine-new{box-shadow:0 0 0 2px var(--primary) inset!important;animation:freshIn .6s cubic-bezier(.2,1.2,.3,1) both}
 .x-mine-new .esg-state{color:var(--primary-text)!important;font-weight:700!important}
+.x-cover{z-index:6;transition:opacity .16s ease}
+.x-cover-out{opacity:0}
+.x-hold{z-index:6}
+.stage.x-wait{visibility:hidden}

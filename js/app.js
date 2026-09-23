@@ -1851,11 +1851,16 @@ document.addEventListener('pointerdown',e=>{
  if(push){ghost=stage.cloneNode(true);ghost.removeAttribute('id');ghost.classList.add('x-ghost');ghost.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));transitionMode='none'}
  _r4();
  if(!push)return;
- phone.insertBefore(ghost,mode==='forward'?stage:stage.nextSibling);
- const shade=el('div','x-shade');(mode==='forward'?ghost:stage).append(shade);
- stage.classList.add(mode==='forward'?'x-push-in':'x-pop-under');ghost.classList.add(mode==='forward'?'x-push-under':'x-pop-out');
- shade.classList.add(mode==='forward'?'in':'out');
- setTimeout(()=>{ghost.remove();shade.remove();stage.classList.remove('x-push-in','x-pop-under')},360);
+ phone.insertBefore(ghost,stage.nextSibling);ghost.classList.add('x-hold');stage.classList.add('x-wait');
+ const pending=[...stage.querySelectorAll('img')].filter(i=>!i.complete||!i.naturalWidth);
+ Promise.race([Promise.all(pending.map(i=>i.decode?i.decode().catch(()=>{}):Promise.resolve())),new Promise(r=>setTimeout(r,450))]).then(()=>{
+   if(mode==='forward')phone.insertBefore(ghost,stage);
+   ghost.classList.remove('x-hold');stage.classList.remove('x-wait');
+   const shade=el('div','x-shade');(mode==='forward'?ghost:stage).append(shade);
+   stage.classList.add(mode==='forward'?'x-push-in':'x-pop-under');ghost.classList.add(mode==='forward'?'x-push-under':'x-pop-out');
+   shade.classList.add(mode==='forward'?'in':'out');
+   setTimeout(()=>{ghost.remove();shade.remove();stage.classList.remove('x-push-in','x-pop-under')},360);
+ });
 }}
 /* edge swipe to go back */
 {let sx=0,sy=0,edge=false;
@@ -1955,6 +1960,30 @@ showSuccessModal=function(old){old?.remove();showIdeaDone()};
  if(window.__reopenCompose){window.__reopenCompose=false;showIdeaModal({instant:true})}
 }}
 ICON.close2='<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>';
+
+/* iOS keeps the page scrolled / the viewport stale after the keyboard closes -> tab bar looked taller.
+   Snap the page back and re-measure whenever an input loses focus or the visual viewport settles. */
+{let t=null;const settle=()=>{clearTimeout(t);t=setTimeout(()=>{if(/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;stableViewportHeight=0;syncPrototypeViewport();try{updateTopFill()}catch(_){}},120)};
+ document.addEventListener('focusout',settle,true);
+ window.visualViewport?.addEventListener('resize',settle);window.visualViewport?.addEventListener('scroll',settle);
+ window.addEventListener('pageshow',settle);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')settle()});}
+
+/* ===== no white flash between screens =====
+   Keep a snapshot of the old screen on top until the new screen's images are decoded, then transition. */
+{const _r5=render;render=function(){
+ const mode=transitionMode;
+ const pushLike=(mode==='forward'||mode==='back');
+ const skip=pushLike||view.type==='screen'||!stage.children.length||reduceMotion;
+ let cover=null;
+ if(!skip){cover=stage.cloneNode(true);cover.removeAttribute('id');cover.classList.add('x-ghost','x-cover');cover.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
+ _r5();
+ if(!cover)return;
+ phone.insertBefore(cover,stage.nextSibling);
+ const pending=[...stage.querySelectorAll('img')].filter(i=>!i.complete||!i.naturalWidth);
+ const ready=Promise.race([Promise.all(pending.map(i=>i.decode?i.decode().catch(()=>{}):Promise.resolve())),new Promise(r=>setTimeout(r,450))]);
+ ready.then(()=>{cover.classList.add('x-cover-out');setTimeout(()=>cover.remove(),180)});
+}}
+/* the push/pop animation also waits for decode */
 
 render();
 })();
