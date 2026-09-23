@@ -1657,6 +1657,8 @@ async function kWakeLock(){try{if('wakeLock' in navigator&&!kWake&&document.visi
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')kWakeLock()});
 document.addEventListener('pointerup',kWakeLock,{capture:true,passive:true});
 /* device / browser back: go back inside the app; leave the app only from the first screen */
+const IS_IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(!IS_IOS){
 window.history.replaceState({gs:'root'},'');window.history.pushState({gs:'app'},'');
 window.addEventListener('popstate',()=>{
  const layer=document.querySelector('.kz-layer');if(layer){layer.remove();window.history.pushState({gs:'app'},'');return}
@@ -1664,6 +1666,8 @@ window.addEventListener('popstate',()=>{
  if(history.length&&!atStart()){back();window.history.pushState({gs:'app'},'');return}
  /* at the first screen: let the next back press close the app */
 });
+}
+
 document.addEventListener('contextmenu',e=>{if(!/^(INPUT|TEXTAREA)$/.test(e.target.tagName))e.preventDefault()});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 let kLastTouch=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-kLastTouch<320&&!/^(INPUT|TEXTAREA)$/.test(e.target.tagName))e.preventDefault();kLastTouch=t},{passive:false});
@@ -1846,7 +1850,7 @@ document.addEventListener('pointerdown',e=>{
 /* ===================== app-like navigation & surfaces ===================== */
 /* 1. push / pop page transitions (new page slides in from the right, back slides it out) */
 {const _r4=render;render=function(){
- const mode=transitionMode;const push=(mode==='forward'||mode==='back')&&!reduceMotion&&stage.children.length&&!(view.type==='screen');
+ const mode=transitionMode;const swipeFrom=window.__swipeFrom||0;const push=(mode==='forward'||mode==='back')&&!reduceMotion&&stage.children.length&&!(view.type==='screen');
  let ghost=null;
  if(push){ghost=stage.cloneNode(true);ghost.removeAttribute('id');ghost.classList.add('x-ghost');ghost.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));transitionMode='none'}
  _r4();
@@ -1857,15 +1861,24 @@ document.addEventListener('pointerdown',e=>{
    if(mode==='forward')phone.insertBefore(ghost,stage);
    ghost.classList.remove('x-hold');stage.classList.remove('x-wait');
    const shade=el('div','x-shade');(mode==='forward'?ghost:stage).append(shade);
+   if(mode==='back'&&swipeFrom){ghost.style.setProperty('--from',swipeFrom+'px');stage.style.setProperty('--under',(-28+swipeFrom/390*28)+'%')}
    stage.classList.add(mode==='forward'?'x-push-in':'x-pop-under');ghost.classList.add(mode==='forward'?'x-push-under':'x-pop-out');
    shade.classList.add(mode==='forward'?'in':'out');
-   setTimeout(()=>{ghost.remove();shade.remove();stage.classList.remove('x-push-in','x-pop-under')},360);
+   setTimeout(()=>{ghost.remove();shade.remove();stage.classList.remove('x-push-in','x-pop-under');stage.style.removeProperty('--under')},360);
  });
 }}
-/* edge swipe to go back */
-{let sx=0,sy=0,edge=false;
- document.addEventListener('pointerdown',e=>{const r=phone.getBoundingClientRect();edge=(e.clientX-r.left)<22*(r.width/390)&&history.length>0&&!atStart()&&view.type!=='home';sx=e.clientX;sy=e.clientY},true);
- document.addEventListener('pointerup',e=>{if(!edge)return;edge=false;const dx=e.clientX-sx,dy=Math.abs(e.clientY-sy);if(dx>70&&dx>dy*1.5){buzz(6);back()}},true);}
+/* edge swipe to go back — the page follows the finger like iOS */
+{let sx=0,sy=0,edge=false,drag=false,dx=0;const W0=()=>phone.getBoundingClientRect();
+ const canBack=()=>history.length>0&&!atStart()&&view.type!=='home'&&!overlay.querySelector('.modal-dim,.x-compose,.x-done,.guide');
+ document.addEventListener('pointerdown',e=>{const r=W0();edge=(e.clientX-r.left)<24*(r.width/390)&&canBack();sx=e.clientX;sy=e.clientY;drag=false;dx=0},true);
+ document.addEventListener('pointermove',e=>{if(!edge)return;const s=W0().width/390;const mx=(e.clientX-sx)/s,my=Math.abs(e.clientY-sy)/s;
+   if(!drag){if(mx>8&&mx>my*1.3){drag=true;stage.classList.add('x-swiping')}else if(my>12){edge=false;return}else return}
+   dx=Math.max(0,mx);stage.style.transform=`translateX(${dx}px)`;phone.style.setProperty('--swipe',Math.min(1,dx/390));e.preventDefault()},{capture:true,passive:false});
+ const end=e=>{if(!edge)return;edge=false;if(!drag)return;drag=false;stage.classList.remove('x-swiping');
+   const go=dx>110;
+   if(go){buzz(6);window.__swipeFrom=dx;stage.style.transform='';back();window.__swipeFrom=0}
+   else{stage.style.transition='transform .22s cubic-bezier(.2,.8,.2,1)';stage.style.transform='';setTimeout(()=>stage.style.transition='',240)}};
+ document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);}
 
 /* 2. info panels become bottom sheets (confirmations stay dialogs) + swipe down to close */
 function sheetify(dimEl){
@@ -1954,7 +1967,7 @@ showSuccessModal=function(old){old?.remove();showIdeaDone()};
 {const _re=renderESG;renderESG=function(t){_re(t);
  const list=stage.querySelector('.esg-list');if(!list)return;
  const inject=()=>{if(view.tab!=='mine'||!gs.myIdeas.length||list.querySelector('.x-mine-new'))return;
-   gs.myIdeas.slice().reverse().forEach(m=>{const c=el('div','esg-post-card x-mine-new');c.innerHTML=`<strong class="esg-company"></strong><p class="esg-desc"></p><div class="esg-foot"><span class="esg-state">심사중</span><i class="esg-progress"><b style="width:4%"></b></i><span class="esg-count">방금 제출</span></div>`;
+   gs.myIdeas.slice().reverse().forEach(m=>{const c=el('div','esg-post-card x-mine-new x-review');c.innerHTML=`<strong class="esg-company"></strong><p class="esg-desc"></p><div class="esg-foot"><span class="esg-state">심사중</span><i class="esg-progress"><b style="width:4%"></b></i><span class="esg-count">방금 제출</span></div>`;
      c.querySelector('.esg-company').textContent=m.company;c.querySelector('.esg-desc').textContent=m.idea;list.prepend(c)})};
  inject();new MutationObserver(inject).observe(list,{childList:true});
  if(window.__reopenCompose){window.__reopenCompose=false;showIdeaModal({instant:true})}
@@ -2023,6 +2036,7 @@ new MutationObserver(()=>paintIndicatorStrip()).observe(stage,{childList:true});
      const st=(c.querySelector('.esg-state')?.textContent||'').trim();if(st!=='심사중')return;
      if(view.tab!=='mine'){c.remove();return}
      if(c.dataset.locked)return;c.dataset.locked='1';c.classList.add('x-review');
+     const firstNormal=[...list.children].find(n=>!n.classList.contains('x-review')&&!n.classList.contains('x-mine-new'));if(firstNormal&&firstNormal!==c)list.insertBefore(c,firstNormal);
      const h=c.querySelector('.esg-heart');
      if(h){h.classList.remove('liked');h.classList.add('x-locked');h.setAttribute('aria-disabled','true');h.setAttribute('aria-label','심사 중이라 아직 공감할 수 없어요');}
      c.addEventListener('click',e=>{if(e.target.closest('.esg-heart')){e.stopPropagation();e.preventDefault();showToast('심사가 끝나면 공감할 수 있어요.')}},true);
@@ -2034,6 +2048,93 @@ new MutationObserver(()=>paintIndicatorStrip()).observe(stage,{childList:true});
 {const _ft=PAGES.esgDetail.footer;PAGES.esgDetail.footer=function(f,v){
  if(v.data&&v.data.state==='심사중'){const b=el('button','x-cta disabled','심사가 끝나면 공감할 수 있어요');b.type='button';b.disabled=true;f.append(b);return}
  _ft(f,v)}}
+/* skip only belongs to the '월별 실천 연동' step */
+document.addEventListener('click',e=>{const s=e.target.closest('.skip-hit');if(s)setTimeout(()=>s.remove(),60)},true);
+
+/* ===== persistent tab bar layer: icons, labels and sprouts animate between tabs instead of being redrawn ===== */
+{const pn=el('div','x-pnav hide');const items=[];
+ NAV_ICONS.forEach((ic,i)=>{const it=el('div','x-pnav-item');it.style.left=(NAV_CX[i]-30)+'px';
+   it.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg><span>${NAV_LABELS[i]}</span>`;
+   const p=SPROUT_POS[i];const sp=el('div','x-pnav-sprout');sp.innerHTML=SPROUT2;Object.assign(sp.style,{left:p.x+'px',top:p.y+'px',width:p.w+'px',height:p.h+'px'});sp.style.setProperty('--r',p.r+'deg');
+   pn.append(it,sp);items.push([it,sp])});
+ phone.insertBefore(pn,overlay);
+ let cur=-1;
+ window.__pnavSet=(active)=>{
+   if(active==null||active<0){pn.classList.add('hide');return}
+   pn.classList.remove('hide');if(active===cur)return;
+   items.forEach(([it,sp],i)=>{it.classList.toggle('on',i===active);sp.classList.toggle('on',i===active)});cur=active;
+ };
+ const _an3=addNav;addNav=function(active,...rest){_an3(active,...rest);window.__navActive=active};
+ const _r8=render;render=function(){window.__navActive=null;_r8();window.__pnavSet(stage.querySelector('.unified-nav-hit-layer')?window.__navActive:null)};
+}
+
+/* ===== tab bar icons redrawn to match the design (no distorted stock icons) ===== */
+{const SP='<g class="sp"><path d="M0 0C.3-3 .5-6 0-9" fill="none" stroke="#34c53e" stroke-width="1.9" stroke-linecap="round"/><path d="M0-7.8C-1.4-11.4-4.6-12.6-6.4-11.2-5.3-8.7-2.6-7.3 0-7.8Z" fill="#34c53e"/><path d="M0-8.4C1.1-13 5.4-14.5 8.1-12.6 6.9-9.3 3.2-7.5 0-8.4Z" fill="#34c53e"/></g>';
+ const ICONS2=[
+  `<svg viewBox="0 0 48 40" aria-hidden="true"><defs><mask id="hm"><rect width="48" height="40" fill="#fff"/><rect x="21.6" y="25.4" width="4.8" height="9" rx="2.4" fill="#000"/></mask></defs><path d="M24 9.6 34.4 18.8V32.2H13.6V18.8Z" fill="currentColor" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" mask="url(#hm)"/><g transform="translate(29.4 14.8) rotate(24) scale(1.22)">${SP}</g></svg>`,
+  `<svg viewBox="0 0 48 40" aria-hidden="true"><circle cx="28.6" cy="12.6" r="5.9" fill="currentColor"/><ellipse cx="30" cy="26.2" rx="8.6" ry="5.6" fill="currentColor"/><circle cx="17" cy="14.8" r="6" fill="currentColor" stroke="#fff" stroke-width="1.9"/><ellipse cx="16.4" cy="28.4" rx="9.4" ry="5.8" fill="currentColor" stroke="#fff" stroke-width="1.9"/><g transform="translate(41 34.2) rotate(10) scale(1.2)">${SP}</g></svg>`,
+  `<svg viewBox="0 0 48 40" aria-hidden="true"><g fill="currentColor"><circle cx="24" cy="18.2" r="7.6"/><path d="M18.6 21.6C19.4 24 20 25.6 20.4 27.2H27.6C28 25.6 28.6 24 29.4 21.6Z"/><rect x="20.3" y="28.4" width="7.4" height="2.3" rx="1.15"/><rect x="21.4" y="31.5" width="5.2" height="2" rx="1"/></g><g stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M24 4.8V7.4M14.6 8.6l1.8 1.8M33.4 8.6l-1.8 1.8M10.6 18.2h2.6M37.4 18.2h-2.6M15.2 26.6l1.7-1.6M32.8 26.6l-1.7-1.6"/></g><g transform="translate(24 25) scale(.78)">${SP.replace(/#34c53e/g,'#3ad84a')}</g></svg>`,
+  `<svg viewBox="0 0 48 40" aria-hidden="true"><g transform="translate(22.6 22.8) rotate(-40) scale(1.12)"><path d="M-11 -6.4H4.6L10.8 0 4.6 6.4H-11Z" fill="currentColor" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/><circle cx="5.2" cy="0" r="2.2" fill="#fff"/><circle cx="5.2" cy="0" r="1" fill="currentColor"/></g><g transform="translate(27.2 18.3) rotate(20) scale(1.22)">${SP}</g></svg>`
+ ];
+ const pn=document.querySelector('.x-pnav');
+ if(pn){pn.querySelectorAll('.x-pnav-sprout').forEach(s=>s.remove());
+   pn.querySelectorAll('.x-pnav-item').forEach((it,i)=>{it.querySelector('svg').outerHTML=ICONS2[i]});}
+}
+/* hide the persistent tab bar while the team chat covers the screen */
+{const pn=document.querySelector('.x-pnav');
+ const chk=()=>{const chat=stage.querySelector('.team-chat-overlay:not([data-closing="1"])');pn&&pn.classList.toggle('x-chat-hide',!!chat)};
+ new MutationObserver(chk).observe(stage,{childList:true,subtree:true,attributes:true,attributeFilter:['data-closing']});}
+
+/* ===================== team chat: white, green accent, seeded conversation ===================== */
+const TEAM_CHAT_SEED=[
+ {who:1,t:'08:42',m:'오늘 출근길에 자전거 탔어요 🚲 생각보다 금방이네요'},
+ {who:2,t:'09:15',m:'저는 텀블러 챙겼어요! 카페 할인도 받았어요 ☕'},
+ {sys:'추용하님이 이번 주 목표를 달성했어요 🌱'},
+ {who:0,t:'12:03',m:'다들 조금만 더 힘내요! 한 명만 더 달성하면 +6%예요 💪'},
+ {who:3,t:'12:30',m:'점심은 채식 메뉴로 도전 중입니다 🥗'},
+ {who:4,t:'12:41',m:'저는 아직 5.4kg 남았네요… 퇴근길엔 걸어갈게요!'},
+ {who:1,t:'12:42',m:'오 화이팅 🙌 같이 걸어요'},
+];
+const TEAM_NAMES=['추용하','김혜민','정진술','김도훈','황유빈'];
+const CHEERS=['좋아요 👍','멋져요!','저도 해볼게요 🌱','오 대박 👏','화이팅!'];
+function tcNow(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+openTeamChatOverlay=function(){
+ clearTimers();if(stage.querySelector('.team-chat-overlay'))return;
+ const page=el('div','team-chat-overlay x-tchat');page.style.transform='translate3d(100%,0,0)';
+ const bar=el('div','x-tc-bar');const bk=el('button','x-icon-btn');bk.type='button';bk.setAttribute('aria-label','뒤로');bk.innerHTML=ico('back');
+ const ttl=el('div','x-tc-title');ttl.innerHTML='<strong>채팅</strong><span>팀원 5명 · 이번 주 1명 달성</span>';
+ const mem=el('button','x-icon-btn');mem.type='button';mem.setAttribute('aria-label','팀 정보');mem.innerHTML=ico('info');
+ bar.append(img('assets/team/statusbar.png','x-status'),bk,ttl,mem);
+ const log=el('div','x-tc-log');
+ const add=(m,animate)=>{
+   let row;
+   if(m.sys){row=el('div','x-tc-sys',m.sys)}
+   else if(m.who===0){row=el('div','x-tc-row me');const b=el('div','x-tc-bubble');b.textContent=m.m;row.append(el('span','x-tc-time',m.t),b)}
+   else{row=el('div','x-tc-row');const av=img(`assets/team/av_${m.who}.png`,'x-tc-av');const col=el('div','x-tc-col');col.append(el('span','x-tc-name',TEAM_NAMES[m.who]));
+     const line=el('div','x-tc-line');const b=el('div','x-tc-bubble');b.textContent=m.m;line.append(b,el('span','x-tc-time',m.t));col.append(line);row.append(av,col)}
+   if(animate)row.classList.add('x-tc-new');log.append(row);log.scrollTop=log.scrollHeight;
+ };
+ log.append(el('div','x-tc-date','오늘'));
+ TEAM_CHAT_SEED.forEach(m=>add(m,false));
+ chatLogs.team.forEach(m=>add({who:0,t:m.t||'',m:m.m||m},false));
+ const inbar=el('div','x-tc-input');const input=el('input','chat-input x-tc-field');input.placeholder='메시지를 입력하세요';
+ const send=el('button','x-tc-send');send.type='button';send.setAttribute('aria-label','보내기');send.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';send.disabled=true;
+ inbar.append(input,send);
+ page.append(bar,log,inbar);
+ const sync=()=>{send.disabled=!input.value.trim()};input.addEventListener('input',sync);
+ const doSend=()=>{const v=input.value.trim();if(!v)return;const m={who:0,t:tcNow(),m:v};chatLogs.team.push(m);add(m,true);input.value='';sync();buzz(8);
+   setTimeout(()=>{if(!page.isConnected)return;const who=1+Math.floor(Math.random()*4);add({who,t:tcNow(),m:CHEERS[Math.floor(Math.random()*CHEERS.length)]},true)},1400)};
+ input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doSend()}});send.addEventListener('click',doSend);
+ bk.addEventListener('click',()=>closeTeamChatOverlay(page));mem.addEventListener('click',()=>go('teamInfo'));
+ stage.append(page);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{const a=page.animate([{transform:'translate3d(100%,0,0)'},{transform:'translate3d(0,0,0)'}],{duration:360,easing:'cubic-bezier(.22,.82,.22,1)',fill:'forwards'});a.onfinish=()=>{page.style.transform='translate3d(0,0,0)';a.cancel();log.scrollTop=log.scrollHeight}}));
+ /* swipe right to close */
+ let sid=null,s0=0,sl=0;
+ page.addEventListener('pointerdown',e=>{if(e.target.closest('input,button,.x-tc-log'))return;sid=e.pointerId;s0=sl=e.clientX});
+ page.addEventListener('pointermove',e=>{if(e.pointerId!==sid)return;sl=e.clientX;const dx=Math.max(0,(sl-s0)/(window.__sx||1));page.style.transform=`translate3d(${dx}px,0,0)`});
+ const fin=e=>{if(e.pointerId!==sid)return;sid=null;const dx=(sl-s0)/(window.__sx||1);if(dx>90)closeTeamChatOverlay(page);else page.style.transform='translate3d(0,0,0)'};
+ page.addEventListener('pointerup',fin);page.addEventListener('pointercancel',fin);
+};
 
 render();
 })();
