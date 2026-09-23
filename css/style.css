@@ -3150,7 +3150,7 @@ textarea:focus-visible{
 .x-empty-cover{position:absolute;left:0;right:0;top:130px;bottom:0;background:#fff;z-index:10;display:flex;justify-content:center;padding-top:120px;color:#6b706b;font:15px -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
 
 /* live numbers on baked screens */
-.x-pill-num{position:absolute;left:272px;top:64px;width:68px;height:24px;text-align:right;font:600 14px/24px -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;color:#2b2f2b;z-index:20;pointer-events:none;letter-spacing:-.01em}
+.x-pill-num{position:absolute;left:276px;top:65px;width:72px;height:24px;text-align:center;font:600 14px/24px -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;color:#2b2f2b;z-index:20;pointer-events:none;letter-spacing:-.01em}
 .x-badge{position:absolute;left:150px;top:109px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#f25c5c;color:#fff;text-align:center;font:800 10px/16px -apple-system,BlinkMacSystemFont,sans-serif;z-index:20;pointer-events:none}
 .x-total{position:absolute;left:33px;top:170px;z-index:20;color:#fff;font:700 33px/42px -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;letter-spacing:-.02em;pointer-events:none}
 .x-total small{font-size:33px;font-weight:600}
@@ -3509,3 +3509,62 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .m3-switch:not(.on) i{width:14px;height:14px;margin-top:-7px;left:7px;background:#c3c7c3}
 .team-new-achievement.toast-only .team-new-toast{top:-300px!important}
 .team-member-praise.action-sent::after,.team-member-nag.action-sent::after{right:13px!important;top:13px!important;width:18px!important;height:18px!important;font-size:11px!important;box-shadow:0 1px 4px rgba(0,0,0,.12)!important}
+
+/* ===== micro-interactions ===== */
+/* sprout growth */
+.nav-sprout-live svg{overflow:visible}
+.nav-sprout-live .sp-leaf{transform-box:fill-box}
+.nav-sprout-live .sp-leaf.l{transform-origin:100% 85%}
+.nav-sprout-live .sp-leaf.r{transform-origin:0% 95%}
+.nav-sprout-live.grow2 .sp-stem{stroke-dasharray:14;stroke-dashoffset:14;animation:spStem .42s cubic-bezier(.3,.7,.3,1) forwards}
+.nav-sprout-live.grow2 .sp-leaf.l{transform:scale(0) rotate(40deg);animation:spLeaf .55s .28s cubic-bezier(.25,1.55,.4,1) forwards}
+.nav-sprout-live.grow2 .sp-leaf.r{transform:scale(0) rotate(-40deg);animation:spLeaf .6s .4s cubic-bezier(.25,1.55,.4,1) forwards}
+.nav-sprout-live.grow2 svg{transform-origin:47% 96%;animation:spSway 1s .8s ease-in-out}
+@keyframes spStem{to{stroke-dashoffset:0}}
+@keyframes spLeaf{to{transform:scale(1) rotate(0)}}
+@keyframes spSway{0%{transform:rotate(0)}30%{transform:rotate(-7deg)}60%{transform:rotate(4deg)}100%{transform:rotate(0)}}
+.nav-sprout-live.idle svg{transform-origin:47% 96%;animation:spIdle 7s 2s ease-in-out infinite}
+@keyframes spIdle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-6deg)}94%{transform:rotate(4deg)}97%{transform:rotate(-1.5deg)}}
+/* ripple */
+.x-rip-host{position:relative;overflow:hidden}
+.esg-propose-fixed.x-rip-host{position:absolute}
+.x-ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.14;transform:scale(0);pointer-events:none;animation:xRipple .6s cubic-bezier(.2,.6,.3,1) forwards;z-index:0}
+.x-cta .x-ripple,.info-close .x-ripple,.x-btn:not(.ghost) .x-ripple,.esg-propose-fixed .x-ripple,.modal-submit-visible .x-ripple,.my-stat .x-ripple{background:#fff;opacity:.28}
+@keyframes xRipple{to{transform:scale(1);opacity:0}}
+/* badge bump + fresh coupon */
+.x-badge.bump{animation:badgeBump .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes badgeBump{0%{transform:scale(1)}35%{transform:scale(1.55)}100%{transform:scale(1)}}
+.coupon-mine-card.fresh{animation:freshIn .7s cubic-bezier(.2,1.2,.3,1) both;box-shadow:0 0 0 2px #18c735 inset}
+@keyframes freshIn{0%{transform:translateY(-14px) scale(.96);opacity:0}100%{transform:none;opacity:1}}
+/* confetti */
+.x-confetti{position:absolute;left:50%;top:38%;width:0;height:0;z-index:300;pointer-events:none}
+.x-confetti i{position:absolute;width:8px;height:12px;border-radius:2px;animation:cf 1.15s cubic-bezier(.15,.7,.3,1) both}
+@keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 260px)) rotate(var(--r));opacity:0}}
+/* heart burst */
+.x-burst{position:absolute;width:0;height:0;z-index:200;pointer-events:none}
+.x-burst i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;animation:burst .62s cubic-bezier(.2,.8,.3,1) forwards;transform:rotate(var(--a)) translateY(0)}
+.x-burst i.heart{background:#18c735;border-radius:50% 50% 0 50%}
+.x-burst i.leaf{background:#8be28b;border-radius:0 80% 0 80%}
+@keyframes burst{0%{transform:rotate(var(--a)) translateY(0) scale(.4);opacity:1}100%{transform:rotate(var(--a)) translateY(-26px) scale(1);opacity:0}}
+/* switch thumb press */
+.m3-switch:active i{width:28px!important;height:28px!important;margin-top:-14px!important}
+.m3-switch.on:active i{left:18px!important}
+.m3-switch:not(.on):active i{left:2px!important}
+/* barcode scan line */
+.bc-code{position:relative;overflow:hidden}
+.bc-code::after{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#ff4d4d 18%,#ff4d4d 82%,transparent);box-shadow:0 0 8px rgba(255,77,77,.7);animation:scan 1.8s ease-in-out infinite}
+@keyframes scan{0%,100%{top:6%}50%{top:92%}}
+/* home mascot squish */
+.home-main-mascot.squish{animation:squish .42s cubic-bezier(.3,1.6,.4,1)!important}
+@keyframes squish{0%{transform:scale(1)}30%{transform:scale(1.06,.9)}60%{transform:scale(.96,1.05)}100%{transform:scale(1)}}
+/* carbon pin hop */
+.carbon17-pin.hop{animation:pinHop .5s cubic-bezier(.3,1.5,.4,1)}
+@keyframes pinHop{0%{transform:translateX(-50%) translateY(0)}35%{transform:translateX(-50%) translateY(-12px)}100%{transform:translateX(-50%) translateY(0)}}
+/* team bonus breathing glow */
+.team-live-bonus-value{animation:bonusGlow 3.6s 1.5s ease-in-out infinite}
+@keyframes bonusGlow{0%,100%{text-shadow:none}50%{text-shadow:0 0 14px rgba(24,199,53,.45)}}
+/* chips & cards press depth */
+.x-chip:active,.x-sheet-btn:active{transform:scale(.97)}
+.esg-post-card:active,.coupon-browse-card:active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){.nav-sprout-live svg,.nav-sprout-live path,.team-live-bonus-value,.bc-code::after{animation:none!important}}
+.team-bonus-label.x-rip-host,.tl-info.x-rip-host,.modal-submit-visible.x-rip-host,.esg-propose-fixed.x-rip-host{position:absolute!important}

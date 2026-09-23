@@ -1774,6 +1774,75 @@ function paintStatusBar(){
  card.append(co,idea);
 }}
 
+/* ===================== micro-interactions ===================== */
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const buzz=(ms=8)=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(_){}};
+
+/* 1. natural sprout: stem draws up, leaves unfurl one after another, then a soft sway */
+const SPROUT2='<svg viewBox="0 0 24 24" aria-hidden="true"><path class="sp-stem" d="M11.4 23c.2-4.6.1-8 .9-11.2" fill="none" stroke="#1fbf3a" stroke-width="2.4" stroke-linecap="round"/><path class="sp-leaf l" d="M11.9 14.2C7.6 14.9 3.6 12.5 2.6 8.3c4.3-.9 8.6 1.4 9.3 5.9z" fill="#1fbf3a"/><path class="sp-leaf r" d="M12.2 11.6C12 6.4 15.9 2.3 21.4 1.8c.5 5.4-3.6 9.7-9.2 9.8z" fill="#28cf45"/></svg>';
+{const _an=addNav;addNav=function(active,...rest){const grow=window.__navGrow===active;_an(active,...rest);
+ const s=stage.querySelector('.nav-sprout-live');if(!s)return;s.innerHTML=SPROUT2;s.classList.remove('grow');
+ if(grow&&!reduceMotion){void s.offsetWidth;s.classList.add('grow2')}else s.classList.add('idle');
+ if(grow)setTimeout(()=>{s.classList.remove('grow2');s.classList.add('idle')},1400);
+}}
+
+/* 2. ripple on buttons and list rows (Material state layer) */
+const RIPPLE='.x-cta,.info-close,.x-btn,.x-chip,.x-li,.x-link,.x-res,.x-sheet-btn,.kz-btn,.coupon-barcode-btn,.pl-ib,.x-back,.x-icon-btn,.esg-propose-fixed,.x-mini,.my-stat,.tl-info,.team-bonus-label,.bc-close,.modal-submit-visible';
+document.addEventListener('pointerdown',e=>{
+ const t=e.target.closest(RIPPLE);if(!t||reduceMotion)return;
+ const r=t.getBoundingClientRect();const sx=r.width/t.offsetWidth||1;
+ const d=Math.max(t.offsetWidth,t.offsetHeight)*2.2;const rp=document.createElement('span');rp.className='x-ripple';
+ Object.assign(rp.style,{width:d+'px',height:d+'px',left:((e.clientX-r.left)/sx-d/2)+'px',top:((e.clientY-r.top)/sx-d/2)+'px'});
+ t.classList.add('x-rip-host');t.append(rp);setTimeout(()=>rp.remove(),620);
+},{capture:true,passive:true});
+
+/* 3. point balances roll up to their value */
+function rollNumber(el,to,{from=null,suffix='',dur=700}={}){
+ if(!el)return;const start=from==null?Math.round(to*0.92):from;if(reduceMotion||start===to){el.innerHTML=fmt(to)+suffix;return}
+ const t0=performance.now();const step=now=>{const k=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-k,3);el.innerHTML=fmt(Math.round(start+(to-start)*e))+suffix;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step);
+}
+gs.shown=gs.shown??null;
+{const _rp=renderPoints;renderPoints=function(){_rp();const t=stage.querySelector('.x-total');rollNumber(t,gs.points,{from:gs.shown,suffix:'<small> P</small>'});gs.shown=gs.points}}
+{const _rc=renderCoupon;renderCoupon=function(tab){_rc(tab);const t=stage.querySelector('.x-pill-num');rollNumber(t,gs.points,{from:gs.shown,suffix:' P'});gs.shown=gs.points;
+ if(window.__justExchanged){window.__justExchanged=false;const b=stage.querySelector('.x-badge');if(b){b.classList.add('bump')}confetti();buzz(18);
+   const first=stage.querySelector('.coupon-mine-card');if(first)first.classList.add('fresh')}}}
+
+/* 4. confetti burst */
+function confetti(n=26){
+ if(reduceMotion)return;const layer=el('div','x-confetti');const cols=['#18c735','#ffd24a','#4fc3ff','#ff8a65','#8be28b'];
+ for(let i=0;i<n;i++){const c=el('i');const a=(Math.random()*120+30)*Math.PI/180;const v=140+Math.random()*160;
+   c.style.setProperty('--dx',(Math.cos(a)*v*(Math.random()<.5?-1:1))+'px');c.style.setProperty('--dy',(-Math.sin(a)*v)+'px');c.style.setProperty('--r',(Math.random()*540-270)+'deg');
+   c.style.background=cols[i%cols.length];c.style.animationDelay=(Math.random()*80)+'ms';if(i%3===0)c.style.borderRadius='50%';layer.append(c)}
+ phone.append(layer);setTimeout(()=>layer.remove(),1300);
+}
+/* mark an exchange so the coupon tab can celebrate */
+{const _cb=confirmBox;confirmBox=function(title,msg,ok,fn,danger){_cb(title,msg,ok,ok==='교환하기'?()=>{window.__justExchanged=true;fn&&fn()}:fn,danger)}}
+
+/* 5. heart: little leaf-and-heart burst when liked */
+document.addEventListener('click',e=>{
+ const h=e.target.closest('.esg-heart');if(!h)return;buzz(10);
+ if(!h.classList.contains('liked')||reduceMotion)return;
+ const r=h.getBoundingClientRect(),pr=phone.getBoundingClientRect(),s=pr.width/390;
+ const b=el('div','x-burst');Object.assign(b.style,{left:((r.left+r.width/2-pr.left)/s)+'px',top:((r.top+r.height/2-pr.top)/s)+'px'});
+ for(let i=0;i<7;i++){const p=el('i',i%2?'leaf':'heart');p.style.setProperty('--a',(i*360/7)+'deg');b.append(p)}
+ phone.append(b);setTimeout(()=>b.remove(),700);
+},true);
+
+/* 6. haptics + nav press */
+document.addEventListener('click',e=>{if(e.target.closest('.nav-hit,.m3-switch,.x-chip,.team-member-praise,.team-member-nag,.coupon-barcode-btn,.sheet-activity'))buzz(8)},true);
+
+/* 7. home mascot squishes when pressed */
+document.addEventListener('pointerdown',e=>{
+ if(view.type!=='home')return;const m=stage.querySelector('.home-main-mascot');if(!m)return;
+ const r=m.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
+ if(stage.querySelector('.bottom-sheet')?.getBoundingClientRect().top<e.clientY)return;
+ m.classList.remove('squish');void m.offsetWidth;m.classList.add('squish');
+},true);
+
+/* 8. carbon gauge pin hops to its new stage */
+{const _rcb=renderCarbon;renderCarbon=function(s){_rcb(s);const pin=stage.querySelector('.carbon17-pin');if(!pin)return;
+ new MutationObserver(()=>{pin.classList.remove('hop');void pin.offsetWidth;pin.classList.add('hop')}).observe(pin,{attributes:true,attributeFilter:['style']})}}
+
 render();
 })();
 
