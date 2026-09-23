@@ -1843,6 +1843,119 @@ document.addEventListener('pointerdown',e=>{
 {const _rcb=renderCarbon;renderCarbon=function(s){_rcb(s);const pin=stage.querySelector('.carbon17-pin');if(!pin)return;
  new MutationObserver(()=>{pin.classList.remove('hop');void pin.offsetWidth;pin.classList.add('hop')}).observe(pin,{attributes:true,attributeFilter:['style']})}}
 
+/* ===================== app-like navigation & surfaces ===================== */
+/* 1. push / pop page transitions (new page slides in from the right, back slides it out) */
+{const _r4=render;render=function(){
+ const mode=transitionMode;const push=(mode==='forward'||mode==='back')&&!reduceMotion&&stage.children.length&&!(view.type==='screen');
+ let ghost=null;
+ if(push){ghost=stage.cloneNode(true);ghost.removeAttribute('id');ghost.classList.add('x-ghost');ghost.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));transitionMode='none'}
+ _r4();
+ if(!push)return;
+ phone.insertBefore(ghost,mode==='forward'?stage:stage.nextSibling);
+ const shade=el('div','x-shade');(mode==='forward'?ghost:stage).append(shade);
+ stage.classList.add(mode==='forward'?'x-push-in':'x-pop-under');ghost.classList.add(mode==='forward'?'x-push-under':'x-pop-out');
+ shade.classList.add(mode==='forward'?'in':'out');
+ setTimeout(()=>{ghost.remove();shade.remove();stage.classList.remove('x-push-in','x-pop-under')},360);
+}}
+/* edge swipe to go back */
+{let sx=0,sy=0,edge=false;
+ document.addEventListener('pointerdown',e=>{const r=phone.getBoundingClientRect();edge=(e.clientX-r.left)<22*(r.width/390)&&history.length>0&&!atStart()&&view.type!=='home';sx=e.clientX;sy=e.clientY},true);
+ document.addEventListener('pointerup',e=>{if(!edge)return;edge=false;const dx=e.clientX-sx,dy=Math.abs(e.clientY-sy);if(dx>70&&dx>dy*1.5){buzz(6);back()}},true);}
+
+/* 2. info panels become bottom sheets (confirmations stay dialogs) + swipe down to close */
+function sheetify(dimEl){
+ if(!dimEl||dimEl.dataset.sheet)return;const card=dimEl.querySelector('.info-card:not(.x-confirm),.barcode-card,.qr-card');if(!card)return;
+ dimEl.dataset.sheet='1';dimEl.classList.add('x-as-sheet');card.classList.add('x-sheet-card');
+ let y0=null,dy=0;
+ card.addEventListener('pointerdown',e=>{if(card.scrollTop>0||e.target.closest('button,input,textarea'))return;y0=e.clientY;dy=0;card.style.transition='none'});
+ card.addEventListener('pointermove',e=>{if(y0==null)return;dy=Math.max(0,e.clientY-y0);card.style.transform=`translateY(${dy/(window.__sy||1)}px)`});
+ const end=()=>{if(y0==null)return;y0=null;card.style.transition='';if(dy>90){card.style.transform='translateY(110%)';setTimeout(()=>dimEl.remove(),220)}else card.style.transform=''};
+ card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);
+}
+new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1&&n.classList.contains('modal-dim'))sheetify(n)}))).observe(overlay,{childList:true});
+
+/* 3. FAQ as list rows that open an answer sheet; 4. no underlined text links */
+PAGES.contact.build=function(inner){
+ inner.append(el('div','x-sec','자주 묻는 질문'));const g=el('div','x-group');
+ [['포인트는 언제 적립되나요?','실천 인증 직후 바로 적립돼요. 팀 보너스는 매주 월요일에 더해져요.'],['팀을 바꿀 수 있나요?','팀 메뉴에서 팀을 나간 뒤 새 초대 코드로 들어갈 수 있어요.'],['쿠폰 교환을 취소하고 싶어요.','교환한 쿠폰은 취소할 수 없어요. 사용하지 않은 쿠폰이 만료되기 전에 알려드려요.']]
+ .forEach(([q,a])=>{const r=el('button','x-li one');r.type='button';r.innerHTML=`<span class="x-li-main"><strong>${q}</strong></span>${ico('chev','trail')}`;r.addEventListener('click',()=>infoBox(q,`<p>${a}</p>`,'확인'));g.append(r)});
+ inner.append(g);
+ inner.append(el('div','x-sec','1:1 문의'));
+ const f=el('label','m3-field');const ta=el('textarea');ta.rows=4;ta.placeholder=' ';f.append(ta,el('span','','궁금한 점을 남겨주세요'));inner.append(f);
+ inner.append(el('p','x-note','답변은 가입한 이메일로 1~2일 안에 보내드려요.'));
+ const b=el('button','x-cta','문의 보내기');b.type='button';b.addEventListener('click',()=>{if(!ta.value.trim()){showToast('문의 내용을 입력해 주세요.');return}ta.value='';showToast('문의를 보냈어요. 1~2일 안에 답변드릴게요.')});inner.append(b);
+};
+{const _sb=PAGES.settings.build;PAGES.settings.build=function(inner,...a){_sb(inner,...a);
+ inner.querySelector('.x-textbtn')?.remove();
+ const g=el('div','x-group');const r=el('button','x-li one danger');r.type='button';r.innerHTML=`<span class="x-li-main"><strong>회원 탈퇴</strong></span>${ico('chev','trail')}`;
+ r.addEventListener('click',()=>confirmBox('정말 탈퇴할까요?','적립한 포인트와 쿠폰이 모두 사라져요.','탈퇴하기',()=>showToast('프로토타입에서는 탈퇴되지 않아요.'),true));g.append(r);
+ inner.append(el('div','x-sec','계정 관리'),g);
+}}
+{const _rt=renderTeam;renderTeam=function(){_rt();const i=stage.querySelector('.tl-info');if(i){i.innerHTML=ico('info')+'<span>탄소 잔고란?</span>'}}}
+/* group consecutive rows into one list surface (settings, details, team info) */
+{const _rpg=renderPage;renderPage=function(){_rpg();const inner=stage.querySelector('.x-page .x-inner');if(!inner)return;
+ let run=[];const flush=()=>{if(run.length>1){const g=el('div','x-group x-rows');run[0].before(g);run.forEach(r=>g.append(r))}run=[]};
+ [...inner.children].forEach(c=>{if(c.classList.contains('x-item')&&!c.classList.contains('x-select'))run.push(c);else flush()});flush();
+}}
+
+/* ===================== idea: full-screen compose + completion screen ===================== */
+gs.myIdeas=gs.myIdeas||[];
+const IDEA_COMPANIES=['스타벅스','올리브영','배달의민족','쿠팡','CU','이마트','무신사','맥도날드'];
+function closeLayer(l,dir='down'){l.classList.add(dir==='down'?'x-layer-out':'x-layer-fade');setTimeout(()=>l.remove(),280)}
+showIdeaModal=function(opts={}){
+ clearTimers();overlay.querySelector('.x-compose')?.remove();
+ const L=el('div','x-compose'+(opts.instant?' instant':''));
+ const bar=el('div','x-cbar');
+ const x=el('button','x-icon-btn');x.type='button';x.setAttribute('aria-label','닫기');x.innerHTML=ico('close2');
+ const send=el('button','x-send','제출');send.type='button';
+ bar.append(img('assets/team/statusbar.png','x-status'),x,el('h2','','아이디어 제안'),send);
+ const body=el('div','x-cbody');
+ const hero=el('div','x-chero');hero.innerHTML='<div><small>기업에게 도움이 되는</small><strong><em>ESG 아이디어</em>를<br>제출해 주세요</strong></div>';hero.append(img('assets/hq/idea.png','x-chero-img'));
+ const f1=el('label','m3-field single');const inp=el('input');inp.placeholder=' ';inp.maxLength=30;inp.value=form.company||'';f1.append(inp,el('span','','전달할 기업'));
+ const chips=el('div','x-chips x-cchips');IDEA_COMPANIES.forEach(c=>{const b=el('button','x-chip',c);b.type='button';b.addEventListener('click',()=>{inp.value=c;sync();chips.querySelectorAll('.x-chip').forEach(z=>z.classList.toggle('on',z===b))});chips.append(b)});
+ const f2=el('label','m3-field');const ta=el('textarea');ta.rows=6;ta.placeholder=' ';ta.maxLength=300;ta.value=form.idea||'';f2.append(ta,el('span','','전달할 내용'));
+ const cnt=el('div','x-count');
+ const bot=el('button','x-botcard');bot.type='button';bot.innerHTML='<span class="x-botcard-av"></span><span><strong>그리니와 아이디어 다듬기</strong><small>머릿속 아이디어를 글로 만들어 드릴게요</small></span>'+ico('chev','trail');
+ bot.querySelector('.x-botcard-av').append(img('assets/team/bot_av.png'));
+ body.append(hero,f1,chips,f2,cnt,bot,el('p','x-note','제출한 아이디어는 운영팀 심사 후 게시판에 올라가고, 공감 1,000명이 모이면 기업에 전달돼요.'));
+ const foot=el('div','x-cfoot');const cta=el('button','x-cta','제출하기');cta.type='button';foot.append(cta);
+ L.append(bar,body,foot);overlay.append(L);
+ function sync(){form.company=inp.value;form.idea=ta.value;const ok=inp.value.trim().length>0&&ta.value.trim().length>=5;send.disabled=!ok;cta.disabled=!ok;cta.classList.toggle('disabled',!ok);cnt.textContent=`${ta.value.length} / 300`}
+ inp.addEventListener('input',()=>{sync();chips.querySelectorAll('.x-chip').forEach(z=>z.classList.toggle('on',z.textContent===inp.value))});ta.addEventListener('input',sync);sync();
+ [inp,ta].forEach(i=>i.addEventListener('focus',()=>setTimeout(()=>i.scrollIntoView({block:'center',behavior:'smooth'}),320)));
+ const submit=()=>{if(send.disabled){showToast('기업명과 내용(5자 이상)을 입력해 주세요.');return}document.activeElement?.blur();buzz(14);closeLayer(L,'fade');setTimeout(()=>showIdeaDone(),120)};
+ send.addEventListener('click',submit);cta.addEventListener('click',submit);
+ x.addEventListener('click',()=>{const dirty=inp.value.trim()||ta.value.trim();if(!dirty){closeLayer(L);return}
+   confirmBox('작성을 그만둘까요?','쓰던 내용은 임시로 저장돼요. 다음에 이어서 쓸 수 있어요.','그만두기',()=>closeLayer(L))});
+ bot.addEventListener('click',()=>{window.__reopenCompose=true;setView({type:'chat',kind:'bot'},true,'forward')});
+ if(!opts.instant)setTimeout(()=>{if(!inp.value)inp.focus({preventScroll:true})},420);
+};
+function showIdeaDone(){
+ const company=(form.company||'').trim(),idea=(form.idea||'').trim();
+ gs.myIdeas.unshift({company,idea});
+ const L=el('div','x-done');
+ L.innerHTML=`<div class="x-done-body"><img class="x-done-art" alt=""><h2><em>제출</em>이 완료되었어요</h2><p>소중한 아이디어 감사해요!<br>운영팀 심사 후 게시판에 올라가요.</p>
+ <div class="x-done-card"><small>전달할 기업</small><strong></strong><small>전달할 내용</small><p class="x-done-idea"></p></div>
+ <ol class="x-steps"><li class="on"><b>1</b><span>제출</span></li><li><b>2</b><span>심사</span></li><li><b>3</b><span>공감 1,000명</span></li><li><b>4</b><span>기업 전달</span></li></ol></div>`;
+ L.querySelector('.x-done-art').src='assets/carbon21/mascot_319.png';
+ L.querySelector('.x-done-card strong').textContent=company;L.querySelector('.x-done-idea').textContent=idea;
+ const foot=el('div','x-cfoot two');const edit=el('button','x-cta ghost','수정하기');const go=el('button','x-cta','내 제안 보기');edit.type=go.type='button';foot.append(edit,go);L.append(foot);
+ overlay.append(L);confetti(30);
+ edit.addEventListener('click',()=>{gs.myIdeas.shift();closeLayer(L,'fade');showIdeaModal({instant:false})});
+ go.addEventListener('click',()=>{form.company='';form.idea='';closeLayer(L,'fade');view={type:'esg',tab:'mine'};transitionMode='fade';render()});
+}
+showSuccessModal=function(old){old?.remove();showIdeaDone()};
+/* my submitted ideas appear on top of '내 제안' as 'under review' */
+{const _re=renderESG;renderESG=function(t){_re(t);
+ const list=stage.querySelector('.esg-list');if(!list)return;
+ const inject=()=>{if(view.tab!=='mine'||!gs.myIdeas.length||list.querySelector('.x-mine-new'))return;
+   gs.myIdeas.slice().reverse().forEach(m=>{const c=el('div','esg-post-card x-mine-new');c.innerHTML=`<strong class="esg-company"></strong><p class="esg-desc"></p><div class="esg-foot"><span class="esg-state">심사중</span><i class="esg-progress"><b style="width:4%"></b></i><span class="esg-count">방금 제출</span></div>`;
+     c.querySelector('.esg-company').textContent=m.company;c.querySelector('.esg-desc').textContent=m.idea;list.prepend(c)})};
+ inject();new MutationObserver(inject).observe(list,{childList:true});
+ if(window.__reopenCompose){window.__reopenCompose=false;showIdeaModal({instant:true})}
+}}
+ICON.close2='<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>';
+
 render();
 })();
 
