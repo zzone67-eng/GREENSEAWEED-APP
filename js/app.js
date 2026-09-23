@@ -2015,6 +2015,26 @@ new MutationObserver(()=>paintIndicatorStrip()).observe(stage,{childList:true});
  g.addEventListener('click',e=>{if(!armed||e.target.closest('.guide-bubble'))return;x.click()});
 }}
 
+/* ===== ESG: '심사중' items live only in '내 제안' and can't be liked yet ===== */
+{const _re2=renderESG;renderESG=function(t){_re2(t);
+ const list=stage.querySelector('.esg-list');if(!list)return;
+ const apply=()=>{
+   [...list.querySelectorAll('.esg-post-card')].forEach(c=>{
+     const st=(c.querySelector('.esg-state')?.textContent||'').trim();if(st!=='심사중')return;
+     if(view.tab!=='mine'){c.remove();return}
+     if(c.dataset.locked)return;c.dataset.locked='1';c.classList.add('x-review');
+     const h=c.querySelector('.esg-heart');
+     if(h){h.classList.remove('liked');h.classList.add('x-locked');h.setAttribute('aria-disabled','true');h.setAttribute('aria-label','심사 중이라 아직 공감할 수 없어요');}
+     c.addEventListener('click',e=>{if(e.target.closest('.esg-heart')){e.stopPropagation();e.preventDefault();showToast('심사가 끝나면 공감할 수 있어요.')}},true);
+   });
+ };
+ apply();new MutationObserver(apply).observe(list,{childList:true});
+}}
+/* detail page of an item under review: like button disabled */
+{const _ft=PAGES.esgDetail.footer;PAGES.esgDetail.footer=function(f,v){
+ if(v.data&&v.data.state==='심사중'){const b=el('button','x-cta disabled','심사가 끝나면 공감할 수 있어요');b.type='button';b.disabled=true;f.append(b);return}
+ _ft(f,v)}}
+
 render();
 })();
 
