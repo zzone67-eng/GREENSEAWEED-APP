@@ -1,0 +1,62 @@
+# 그린시윗 (GreenSweet) 프로토타입 v68
+
+내가 만든 탄소를 내가 줄이는 습관 — 모바일 웹앱(PWA) 프로토타입입니다.
+
+## 폴더 구조
+
+```
+index.html              앱 진입점
+css/style.css           전체 스타일
+js/app.js               화면 로직 (모든 좌표는 390×844 디자인 기준)
+assets/                 화면 이미지, 로고, 아이콘
+icons/                  앱 아이콘 (180 / 192 / 512, 마스커블)
+manifest.webmanifest    홈 화면 설치 정보
+sw.js                   오프라인 캐시 (서비스 워커)
+```
+
+## 로컬에서 실행
+
+서비스 워커와 폰트가 동작하려면 `index.html`을 더블클릭하지 말고 로컬 서버로 열어야 합니다.
+
+```bash
+cd greensweet
+python3 -m http.server 8080
+# 브라우저에서 http://localhost:8080
+```
+
+같은 와이파이의 휴대폰에서는 `http://<내 컴퓨터 IP>:8080` 으로 접속하면 됩니다.
+
+## GitHub Pages로 배포
+
+1. GitHub에 새 저장소를 만들고 이 폴더의 파일을 모두 올립니다.
+   ```bash
+   git init
+   git add .
+   git commit -m "GreenSweet v68"
+   git branch -M main
+   git remote add origin https://github.com/<아이디>/<저장소>.git
+   git push -u origin main
+   ```
+2. 저장소 **Settings → Pages → Branch: main / (root)** 로 저장합니다.
+3. 1~2분 뒤 `https://<아이디>.github.io/<저장소>/` 에서 열립니다.
+
+## 휴대폰에 앱처럼 설치
+
+- **iPhone (Safari):** 공유 버튼 → **홈 화면에 추가**
+- **Android (Chrome):** 메뉴 → **앱 설치** 또는 **홈 화면에 추가**
+
+설치하면 주소창 없이 전체 화면으로 실행되고, 한 번 연 뒤에는 오프라인에서도 열립니다.
+
+## 화면 표시 방식
+
+- 휴대폰에서는 앱이 화면 전체를 채웁니다. 디자인 이미지에 들어 있던 가짜 상태바(3:27)는 잘라내고, 기기의 실제 상태바를 씁니다.
+- 디자인(19.5:9)보다 긴 화면은 남는 위쪽을 현재 화면의 헤더 색으로 채우고, 짧은 화면은 비율을 유지한 채 맞춥니다.
+- 휴대폰에서는 가짜 홈 화면(287) 없이 스플래시(288)부터 시작합니다. PC에서는 발표용으로 가짜 홈 화면부터 보여줍니다.
+
+## 수정 후 배포할 때
+
+`sw.js` 맨 위의 `CACHE` 이름을 바꿔야(예: `greensweet-v68-2`) 설치된 앱이 새 버전을 받습니다.
+
+## 앱스토어에 올리려면
+
+이 폴더는 그대로 웹앱입니다. 스토어 배포가 필요하면 [PWABuilder](https://www.pwabuilder.com)에 GitHub Pages 주소를 넣어 Android/iOS 패키지를 만들거나, Capacitor로 감싸서 빌드할 수 있습니다.
