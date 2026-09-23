@@ -663,7 +663,7 @@ function renderSheet(){
      if(qrActivities.has(sheet.activity)){const qrv=img('assets/ui/qr_button_exact.png','daily-route-qr-visual');body.append(qrv);routeQrVisualRef=qrv};
      content.append(body);requestAnimationFrame(()=>addDailyFun(body,sheet.activity))
    }else{
-     content.append(img('assets/sheets/monthly_clean.png','sheet-img'));
+     content.append(img('assets/sheets/monthly_clean.png','sheet-img'));hqMonthly(content);
      buildMonthlyRings()
    }
  }
@@ -1872,9 +1872,9 @@ document.addEventListener('pointerdown',e=>{
  const canBack=()=>history.length>0&&!atStart()&&view.type!=='home'&&!overlay.querySelector('.modal-dim,.x-compose,.x-done,.guide');
  document.addEventListener('pointerdown',e=>{const r=W0();edge=(e.clientX-r.left)<24*(r.width/390)&&canBack();sx=e.clientX;sy=e.clientY;drag=false;dx=0},true);
  document.addEventListener('pointermove',e=>{if(!edge)return;const s=W0().width/390;const mx=(e.clientX-sx)/s,my=Math.abs(e.clientY-sy)/s;
-   if(!drag){if(mx>8&&mx>my*1.3){drag=true;stage.classList.add('x-swiping')}else if(my>12){edge=false;return}else return}
+   if(!drag){if(mx>8&&mx>my*1.3){drag=true;stage.classList.add('x-swiping');phone.classList.add('x-swipe-bg')}else if(my>12){edge=false;return}else return}
    dx=Math.max(0,mx);stage.style.transform=`translateX(${dx}px)`;phone.style.setProperty('--swipe',Math.min(1,dx/390));e.preventDefault()},{capture:true,passive:false});
- const end=e=>{if(!edge)return;edge=false;if(!drag)return;drag=false;stage.classList.remove('x-swiping');
+ const end=e=>{if(!edge)return;edge=false;if(!drag)return;drag=false;stage.classList.remove('x-swiping');setTimeout(()=>phone.classList.remove('x-swipe-bg'),380);
    const go=dx>110;
    if(go){buzz(6);window.__swipeFrom=dx;stage.style.transform='';back();window.__swipeFrom=0}
    else{stage.style.transition='transform .22s cubic-bezier(.2,.8,.2,1)';stage.style.transform='';setTimeout(()=>stage.style.transition='',240)}};
@@ -1992,6 +1992,9 @@ ICON.close2='<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="
  _r5();
  if(!cover)return;
  phone.insertBefore(cover,stage.nextSibling);
+ /* the old screen sits above the overlay too, so bubbles/guides of the new screen are revealed together with it;
+    the tab bar strip is left uncovered because the persistent tab bar animates on its own */
+ if(cover.querySelector('.unified-nav-hit-layer')&&stage.querySelector('.unified-nav-hit-layer'))cover.style.clipPath='inset(0 0 80px 0)';
  const pending=[...stage.querySelectorAll('img')].filter(i=>!i.complete||!i.naturalWidth);
  const ready=Promise.race([Promise.all(pending.map(i=>i.decode?i.decode().catch(()=>{}):Promise.resolve())),new Promise(r=>setTimeout(r,450))]);
  ready.then(()=>{cover.classList.add('x-cover-out');setTimeout(()=>cover.remove(),180)});
@@ -2135,6 +2138,45 @@ openTeamChatOverlay=function(){
  const fin=e=>{if(e.pointerId!==sid)return;sid=null;const dx=(sl-s0)/(window.__sx||1);if(dx>90)closeTeamChatOverlay(page);else page.style.transform='translate3d(0,0,0)'};
  page.addEventListener('pointerup',fin);page.addEventListener('pointercancel',fin);
 };
+
+/* ===================== practice sheet header interactions ===================== */
+{const _hd=hqDaily;hqDaily=function(body,key){_hd(body,key);
+ /* live percentage that counts up with the progress bar */
+ const pct=el('div','x-dh-pct');pct.innerHTML='<b>0</b><i>%</i>';Object.assign(pct.style,{left:(24/390*100)+'%',top:(108/687*100)+'%'});
+ const bar=el('div','x-dh-bar');Object.assign(bar.style,{left:(30/390*100)+'%',top:(160.5/687*100)+'%',width:(330/390*100)+'%',height:(15/687*100)+'%'});bar.innerHTML='<i></i>';
+ body.append(pct,bar);
+ const num=pct.querySelector('b'),fill=bar.querySelector('i');const target=100,dur=reduceMotion?0:950,t0=performance.now();
+ requestAnimationFrame(()=>fill.style.width=target+'%');
+ const step=now=>{const k=dur?Math.min(1,(now-t0)/dur):1;const e=1-Math.pow(1-k,3);num.textContent=Math.round(target*e);if(k<1)requestAnimationFrame(step);else pct.classList.add('done')};requestAnimationFrame(step);
+ /* mascot: gentle float, hop when tapped; chip pops in */
+ const m=body.querySelector('.hq-daily-mascot');if(m){m.classList.add('x-float');const hit=el('button','x-dh-mhit');hit.type='button';hit.setAttribute('aria-label','캐릭터');
+   const b=m.style;Object.assign(hit.style,{left:b.left,top:b.top,width:b.width,height:b.height});hit.addEventListener('click',e=>{e.stopPropagation();m.classList.remove('x-hop');void m.offsetWidth;m.classList.add('x-hop');buzz(8)});body.append(hit)}
+ body.querySelector('.hq-chipcopy')?.classList.add('x-chip-pop');
+}}
+function hqMonthly(content){
+ const cards=[['전기세','6,000원 절약 목표를 달성했어요.','매주 월요일 +0.86kg이 자동으로 지급돼요.',true],['가스비','5,000원 절약 목표를 달성했어요.','매주 월요일 +1.12kg이 자동으로 지급돼요.',true],['수도세','3,000원 절약 목표에 조금 못 미쳤어요.','이번 달에 다시 도전해 보세요. 달성하면 +0.28kg이 지급돼요.',false]];
+ const X=[23,139,255],Wd=113,Y=105,Hh=114;
+ const sweep=el('div','x-mo-sweep');Object.assign(sweep.style,{left:(22/390*100)+'%',top:(Y/688*100)+'%',width:(346/390*100)+'%',height:(Hh/688*100)+'%'});content.append(sweep);
+ cards.forEach(([t,a,b,ok],i)=>{
+   const h=el('button','x-mo-card');h.type='button';h.setAttribute('aria-label',t+' 자세히');Object.assign(h.style,{left:(X[i]/390*100)+'%',top:(Y/688*100)+'%',width:(Wd/390*100)+'%',height:(Hh/688*100)+'%'});
+   const ring=el('span','x-mo-stamp'+(ok?'':' fail'));ring.style.animationDelay=(0.35+i*0.12)+'s';h.append(ring);
+   h.addEventListener('click',()=>{buzz(8);infoBox(`지난달 ${t}`,`<p><b>${a}</b></p><p>${b}</p>`,'확인')});content.append(h)});
+ const glow=el('div','x-mo-glow');Object.assign(glow.style,{left:(78/390*100)+'%',top:(238/688*100)+'%',width:(234/390*100)+'%',height:(30/688*100)+'%'});content.append(glow);
+}
+
+/* overlay extras (e.g. the home carbon bubble) wait until the new screen's images are ready, so everything appears together */
+{const _r9=render;render=function(){_r9();
+ const pending=[...stage.querySelectorAll('img')].filter(i=>!i.complete||!i.naturalWidth);
+ if(!pending.length){overlay.classList.remove('x-hold');return}
+ overlay.classList.add('x-hold');
+ Promise.race([Promise.all(pending.map(i=>i.decode?i.decode().catch(()=>{}):Promise.resolve())),new Promise(r=>setTimeout(r,500))]).then(()=>requestAnimationFrame(()=>overlay.classList.remove('x-hold')));
+}}
+
+/* practice sheet: close X is live and only shown while the sheet is open */
+{const upd=()=>{stage.querySelectorAll('.bottom-sheet').forEach(s=>{
+   let x=s.querySelector(':scope>.x-sheet-x');if(!x){x=el('div','x-sheet-x');x.innerHTML='<svg viewBox="0 0 24 24"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>';s.appendChild(x)}
+   const top=parseFloat(s.style.top)/100*844;const open=top<690;if(x.classList.contains('show')!==open)x.classList.toggle('show',open)})};
+ new MutationObserver(upd).observe(stage,{subtree:true,childList:true,attributes:true,attributeFilter:['style']});}
 
 render();
 })();
