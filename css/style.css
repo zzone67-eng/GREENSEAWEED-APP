@@ -3686,3 +3686,9 @@ html.app-fill body::after,.x-strip-dim{display:none!important}
 .esg-heart.x-locked{opacity:.28;cursor:default}
 .esg-heart.x-locked svg{fill:none!important}
 .x-review .esg-state{color:#b46b1c!important;font-weight:700!important}
+/* tab bar: calm crossfade between tabs (reference style) — no pop / no growing sprout */
+.live-nav-item.on svg{animation:none!important}
+.nav-sprout-live.grow2 svg,.nav-sprout-live.grow2 .sp-stem,.nav-sprout-live.grow2 .sp-leaf,.nav-sprout-live.idle svg{animation:none!important;transform:none!important;stroke-dashoffset:0!important}
+.nav-sprout-live{animation:sproutFade .24s ease both}
+@keyframes sproutFade{from{opacity:0}to{opacity:1}}
+.x-cover{transition:opacity .22s ease!important}
