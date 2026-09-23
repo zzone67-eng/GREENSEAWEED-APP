@@ -3675,3 +3675,6 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .x-guide-ok:active{transform:scale(.97)}
 .x-guide-hint{position:absolute;left:0;right:0;top:66px;text-align:center;color:rgba(255,255,255,.82);font:500 12px/16px var(--gs-font);z-index:9;pointer-events:none;opacity:0;animation:guideOk .3s .6s ease forwards}
 .guide.closing .x-guide-hint,.guide.closing .x-guide-ok{opacity:0!important;transition:opacity .15s}
+/* guides close by tapping outside only */
+.guide-close-icon{display:none!important}
+.guide-close-hit{pointer-events:none!important;opacity:0!important}
