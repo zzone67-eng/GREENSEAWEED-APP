@@ -3402,3 +3402,82 @@ html.app-fill .controls{display:none!important}
 html,body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html.app-fill,html.app-fill body{background:var(--topfill,#fff)!important;transition:background-color .2s}
 html.app-fill .phone{clip-path:inset(var(--cut,0px) 0 0 0)}
+.x-appicon{position:absolute;left:20px;top:74px;width:33px;height:33px;border-radius:9px;box-shadow:0 0 0 1px #ececec,0 1px 3px rgba(0,0,0,.06);z-index:6;pointer-events:none;background:#fff}
+
+/* ===== kiosk ===== */
+html.app-fill,html.app-fill body{-webkit-user-select:none;user-select:none;overscroll-behavior:none;touch-action:manipulation}
+html.app-fill input,html.app-fill textarea{-webkit-user-select:text;user-select:text}
+.kz-layer{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(10,14,10,.55);font-family:var(--gs-font);letter-spacing:-.01em;animation:xFade .2s ease both;padding:24px;box-sizing:border-box}
+.kz-warn-card,.kz-pin-card,.kz-admin-card{background:#fff;border-radius:28px;padding:28px 24px 24px;width:100%;max-width:340px;box-sizing:border-box;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.kz-count{width:72px;height:72px;margin:0 auto 16px;border-radius:50%;background:var(--primary-cont);color:var(--primary-text);font-size:32px;line-height:72px;font-weight:700}
+.kz-warn-card strong,.kz-pin-card strong{display:block;font-size:20px;line-height:28px;font-weight:700;color:var(--on-surface)}
+.kz-warn-card p,.kz-pin-card p{margin:8px 0 20px;font-size:14px;line-height:21px;color:var(--on-surface-var)}
+.kz-warn-card button,.kz-btn{display:block;width:100%;height:48px;border:0;border-radius:999px;background:var(--primary);color:#fff;font:700 15px/48px var(--gs-font);cursor:pointer;margin-top:8px}
+.kz-btn.ghost{background:var(--surface-cont-high);color:var(--on-surface)}
+.kz-btn.danger{background:#fff;color:var(--error);box-shadow:inset 0 0 0 1px var(--outline-var)}
+.kz-dots{display:flex;gap:14px;justify-content:center;margin:4px 0 24px}
+.kz-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--outline);box-sizing:border-box}
+.kz-dots i.on{background:var(--on-surface);border-color:var(--on-surface)}
+.kz-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kz-key{height:60px;border:0;border-radius:18px;background:var(--surface-cont-high);font:500 24px/60px var(--gs-font);color:var(--on-surface);cursor:pointer}
+.kz-key:active{background:var(--outline-var)}
+.kz-key.fn{font-size:15px;background:transparent}
+.shake{animation:kzShake .4s}
+@keyframes kzShake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.kz-admin-card{text-align:left;max-height:90vh;overflow:auto}
+.kz-admin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.kz-admin-head strong{font-size:22px;line-height:30px;font-weight:700}
+.kz-x{width:40px;height:40px;border:0;border-radius:50%;background:transparent;font-size:18px;color:var(--on-surface-var);cursor:pointer}
+.kz-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--outline-var)}
+.kz-row>div{flex:1;display:flex;flex-direction:column}.kz-row b{font-size:16px;line-height:24px;font-weight:600}.kz-row span{font-size:13px;line-height:19px;color:var(--on-surface-var)}
+.kz-label{font-size:14px;line-height:20px;font-weight:700;color:var(--on-surface-var);margin:16px 0 8px}
+.kz-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.kz-help{margin-top:16px;font-size:13px;line-height:20px;color:var(--on-surface-var)}
+.kz-help summary{font-weight:600;color:var(--on-surface);padding:8px 0;cursor:pointer}
+.kz-help p{margin:8px 0}
+.kz-guide p.kz-os{font-size:13px!important;text-align:left;background:var(--surface-cont);border-radius:12px;padding:12px 14px;margin:0 0 10px!important}
+html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;height:var(--sb,0px);background:#fff;z-index:5;pointer-events:none}
+
+/* ===== round 2 fixes ===== */
+/* home: reward/help hotspots stay under the practice sheet */
+.x-tap.reward,.x-tap.help{z-index:30!important}
+/* My page on white */
+.my-live,.my-live .x-body{background:#fff!important}
+.my-live .x-group{border:1px solid var(--outline-var);background:#fff}
+.my-live .x-head{box-shadow:none}
+/* no press flash while a list is being dragged */
+.momentum-dragging .x-li,.momentum-dragging .x-li:active,.momentum-dragging button:active{background:transparent!important}
+.x-li:active{transition:background .01s linear .07s}
+/* carbon gauge markers: clean single-shape pins */
+.carbon17-faint-marker::before,.carbon17-faint-marker::after,.carbon17-pin::before,.carbon17-pin::after{display:none!important}
+.carbon17-faint-marker,.carbon17-pin{background:no-repeat center/100% 100%;width:20px!important;height:26px!important}
+.carbon17-faint-marker{opacity:.5!important;top:6px!important}
+.carbon17-pin{top:516px!important}
+.carbon17-faint-marker.bad,.carbon17-pin.bad{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 26'%3E%3Cpath d='M10 1.2a8 8 0 0 0-8 8c0 5.6 8 15.4 8 15.4s8-9.8 8-15.4a8 8 0 0 0-8-8z' fill='%23fff' stroke='%23f0625a' stroke-width='2'/%3E%3Ccircle cx='10' cy='9.2' r='2.6' fill='%23f0625a'/%3E%3C/svg%3E")}
+.carbon17-faint-marker.good,.carbon17-pin.good{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 26'%3E%3Cpath d='M10 1.2a8 8 0 0 0-8 8c0 5.6 8 15.4 8 15.4s8-9.8 8-15.4a8 8 0 0 0-8-8z' fill='%23fff' stroke='%2318b833' stroke-width='2'/%3E%3Ccircle cx='10' cy='9.2' r='2.6' fill='%2318b833'/%3E%3C/svg%3E")}
+.carbon17-faint-marker .mk,.carbon17-pin .mk{display:none}
+/* team milestones: inactive steps clearly lighter */
+.team-milestone-value{color:#c9cdc9!important}.team-milestone-count{color:#c2c6c2!important}
+.team-milestone-item.active .team-milestone-value,.team-live-bonus-value{color:#12a332!important}
+.team-milestone-item.active .team-milestone-count{color:#3d423d!important}
+/* my coupons: real ticket notches (page-colour cut-out, border only on the card side) */
+.coupon-mine-card::before,.coupon-mine-card::after{clip-path:none!important;background:#fff!important;border:1px solid transparent!important;width:20px!important;height:20px!important;right:71px!important}
+.coupon-mine-card::before{top:-11px!important;border-bottom-color:#D8DDD8!important;border-left-color:#D8DDD8!important;transform:rotate(-45deg)}
+.coupon-mine-card::after{bottom:-11px!important;border-top-color:#D8DDD8!important;border-right-color:#D8DDD8!important;transform:rotate(-45deg)}
+/* hi-res art */
+.hq-abs{position:absolute;pointer-events:none;object-fit:contain}
+.hq-daily-mascot{position:absolute;pointer-events:none;z-index:2}
+.hq-chipcopy{z-index:3}
+.hq-esg-wrap{position:absolute;left:0;top:0;width:160px;height:229px;overflow:hidden;pointer-events:none;z-index:2}
+.hq-team{z-index:2}
+/* tab bar sprouts */
+.nav-sprout-live{position:absolute;z-index:57;pointer-events:none;transform:rotate(var(--r,0deg));transform-origin:47% 96%}
+.nav-sprout-live svg{width:100%;height:100%;display:block;overflow:visible}
+.nav-sprout-live.grow svg{transform-origin:47% 96%;animation:sproutGrow .62s cubic-bezier(.2,1.5,.35,1) both}
+.nav-sprout-live.grow svg path:nth-child(2){transform-origin:48% 58%;animation:leafL .62s .12s cubic-bezier(.2,1.4,.3,1) both}
+.nav-sprout-live.grow svg path:nth-child(3){transform-origin:50% 48%;animation:leafR .62s .18s cubic-bezier(.2,1.4,.3,1) both}
+@keyframes sproutGrow{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes leafL{0%{transform:scale(0) rotate(30deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes leafR{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+@media (prefers-reduced-motion:reduce){.nav-sprout-live.grow svg,.nav-sprout-live.grow svg path{animation:none!important}}
+.carbon17-status{top:463px!important}

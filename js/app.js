@@ -1,3 +1,8 @@
+/* asset alias: large images are shipped as WebP */
+(function(){const A={"assets/carbon21/mascot_297.png": "assets/carbon21/mascot_297.webp", "assets/carbon21/mascot_298.png": "assets/carbon21/mascot_298.webp", "assets/carbon21/mascot_299.png": "assets/carbon21/mascot_299.webp", "assets/carbon21/mascot_300.png": "assets/carbon21/mascot_300.webp", "assets/carbon21/mascot_301.png": "assets/carbon21/mascot_301.webp", "assets/carbon21/mascot_319.png": "assets/carbon21/mascot_319.webp", "assets/daily_headers/bike.png": "assets/daily_headers/bike.webp", "assets/daily_headers/bus.png": "assets/daily_headers/bus.webp", "assets/daily_headers/fullveg.png": "assets/daily_headers/fullveg.webp", "assets/daily_headers/partial.png": "assets/daily_headers/partial.webp", "assets/daily_headers/tumbler.png": "assets/daily_headers/tumbler.webp", "assets/daily_headers/walk.png": "assets/daily_headers/walk.webp", "assets/fixed/points_base.png": "assets/fixed/points_base.webp", "assets/hq/daily_bike.png": "assets/hq/daily_bike.webp", "assets/hq/daily_bus.png": "assets/hq/daily_bus.webp", "assets/hq/daily_fullveg.png": "assets/hq/daily_fullveg.webp", "assets/hq/daily_partial.png": "assets/hq/daily_partial.webp", "assets/hq/daily_tumbler.png": "assets/hq/daily_tumbler.webp", "assets/hq/daily_walk.png": "assets/hq/daily_walk.webp", "assets/hq/esg_mascot.png": "assets/hq/esg_mascot.webp", "assets/hq/idea.png": "assets/hq/idea.webp", "assets/hq/team_mascot.png": "assets/hq/team_mascot.webp", "assets/onboarding/content_289.png": "assets/onboarding/content_289.webp", "assets/onboarding/content_290.png": "assets/onboarding/content_290.webp", "assets/onboarding/content_291.png": "assets/onboarding/content_291.webp", "assets/onboarding/content_292.png": "assets/onboarding/content_292.webp", "assets/onboarding/content_293.png": "assets/onboarding/content_293.webp", "assets/screens/287.png": "assets/screens/287.webp", "assets/screens/288.png": "assets/screens/288.webp", "assets/screens/289.png": "assets/screens/289.webp", "assets/screens/290.png": "assets/screens/290.webp", "assets/screens/291.png": "assets/screens/291.webp", "assets/screens/292.png": "assets/screens/292.webp", "assets/screens/293.png": "assets/screens/293.webp", "assets/screens/297.png": "assets/screens/297.webp", "assets/screens/298.png": "assets/screens/298.webp", "assets/screens/299.png": "assets/screens/299.webp", "assets/screens/300.png": "assets/screens/300.webp", "assets/screens/301.png": "assets/screens/301.webp", "assets/screens/303.png": "assets/screens/303.webp", "assets/screens/304.png": "assets/screens/304.webp", "assets/screens/305.png": "assets/screens/305.webp", "assets/screens/306.png": "assets/screens/306.webp", "assets/screens/308.png": "assets/screens/308.webp", "assets/screens/310.png": "assets/screens/310.webp", "assets/screens/311.png": "assets/screens/311.webp", "assets/screens/312.png": "assets/screens/312.webp", "assets/screens/313.png": "assets/screens/313.webp", "assets/screens/314.png": "assets/screens/314.webp", "assets/screens/316.png": "assets/screens/316.webp", "assets/screens/317.png": "assets/screens/317.webp", "assets/screens/318.png": "assets/screens/318.webp", "assets/screens/319.png": "assets/screens/319.webp", "assets/screens/320.png": "assets/screens/320.webp", "assets/screens/321.png": "assets/screens/321.webp", "assets/screens/322.png": "assets/screens/322.webp", "assets/screens/331.png": "assets/screens/331.webp", "assets/screens/333.png": "assets/screens/333.webp", "assets/screens/334.png": "assets/screens/334.webp", "assets/screens/335.png": "assets/screens/335.webp", "assets/screens/336.png": "assets/screens/336.webp", "assets/screens/337.png": "assets/screens/337.webp", "assets/screens/338.png": "assets/screens/338.webp", "assets/screens/339.png": "assets/screens/339.webp", "assets/screens/340.png": "assets/screens/340.webp", "assets/screens/340_team_clean.png": "assets/screens/340_team_clean.webp", "assets/screens/343.png": "assets/screens/343.webp", "assets/screens/344.png": "assets/screens/344.webp", "assets/screens/345.png": "assets/screens/345.webp", "assets/screens/351.png": "assets/screens/351.webp", "assets/screens/352.png": "assets/screens/352.webp", "assets/scroll/points_clean.jpg": "assets/scroll/points_clean.webp", "assets/sheets/monthly_clean.png": "assets/sheets/monthly_clean.webp", "assets/splash/288_hero_new.png": "assets/splash/288_hero_new.webp", "assets/ui/guide_home_content.png": "assets/ui/guide_home_content.webp", "assets/ui/guide_team_content.png": "assets/ui/guide_team_content.webp", "assets/ui/home_mascot_exact.png": "assets/ui/home_mascot_exact.webp"};const d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');
+const map=v=>{if(typeof v==='string'){const k=v.startsWith('./')?v.slice(2):v;if(A[k])return A[k];}return v;};
+Object.defineProperty(HTMLImageElement.prototype,'src',{get(){return d.get.call(this)},set(v){d.set.call(this,map(v))},configurable:true});
+const sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(n,v){if(this instanceof HTMLImageElement&&n==='src')v=map(v);return sa.call(this,n,v)};})();
 (()=>{
 const W=390,H=844;
 const GS_START=matchMedia('(max-width: 600px), (pointer: coarse)').matches?288:287; /* phones open straight into the app splash */
@@ -42,7 +47,7 @@ function buildTeamList(){
  const top=el('div','tl-top');
  const h=el('div','tl-h');h.innerHTML='달성 <b>1</b>';top.append(h);
  const info=el('button','tl-info','탄소 잔고란?');info.type='button';
- info.addEventListener('click',e=>{e.stopPropagation();showTeamInfo()});top.append(info);
+ info.addEventListener('click',e=>{e.stopPropagation();showTeamInfo('balance')});top.append(info);
  L.append(top);
  const mk=(i,ok,name,val,y)=>{
    const c=el('div','tl-card '+(ok?'ok':'bad'));c.style.top=y+'px';
@@ -55,18 +60,24 @@ function buildTeamList(){
  };
  L.append(mk(0,true,'추용하','+32.8',35));
  const rh=el('div','tl-h red');rh.innerHTML='미달성 <b>4</b>';L.append(rh);
- ['김혜민','정진술','김도훈','황유빈'].forEach((n,i)=>L.append(mk(i+1,false,n,'3.2',[192,290,388,486][i])));
+ [['김혜민','0.8'],['정진술','2.1'],['김도훈','3.6'],['황유빈','5.4']].forEach(([n,v],i)=>L.append(mk(i+1,false,n,v,[192,290,388,486][i])));
  return L;
 }
-function showTeamInfo(){
+function showTeamInfo(part){
  if(overlay.querySelector('.info-dim'))return;
  const d=el('div','modal-dim info-dim');const c=el('div','info-card');
- c.innerHTML=`<h3>탄소 잔고와 팀 보너스</h3>
+ c.innerHTML=part==='balance'?`<h3>탄소 잔고란?</h3>
+ <section><p>생활하면서 쓰는 탄소 <b>하루 2.3kg</b>이 잔고에서 빠지고, 걷기·자전거·채식 같은 실천으로 줄인 만큼 다시 채워져요.</p>
+ <p>이번 주 잔고가 <b>0kg 이상</b>이면 목표 달성이에요. 미달성 팀원 카드의 숫자는 목표까지 채워야 할 양이에요.</p></section>`:`<h3>달성 인원별 팀 보너스</h3>
+ <section><p>팀에서 이번 주 목표를 달성한 사람이 1명 늘 때마다 <b>모든 팀원의 리워드</b>에 3%씩 보너스가 붙어요. 팀은 최대 5명이에요.</p>
+ <div class="info-steps">${[0,1,2,3,4,5].map(n=>`<div class="${n===1?'on':''}"><strong>${n?'+'+n*3+'%':'0%'}</strong><span>${n}명</span></div>`).join('')}</div>
+ <p class="info-now">지금은 1명이 달성해서 <b>+3%</b> 보너스가 적용 중이에요.</p></section>`;
+ if(false){c.innerHTML=`
  <section><h4>탄소 잔고</h4><p>생활하면서 쓰는 탄소 <b>하루 2.3kg</b>이 잔고에서 빠지고, 걷기·자전거·채식 같은 실천으로 줄인 만큼 다시 채워져요.</p>
  <p>이번 주 잔고가 <b>0kg 이상</b>이면 목표 달성이에요.</p></section>
  <section><h4>달성 인원별 팀 보너스</h4><p>팀에서 목표를 달성한 사람이 1명 늘 때마다 <b>모든 팀원의 리워드</b>에 3%씩 보너스가 붙어요. 팀은 최대 5명이에요.</p>
  <div class="info-steps">${[0,1,2,3,4,5].map(n=>`<div class="${n===1?'on':''}"><strong>${n?'+'+n*3+'%':'0%'}</strong><span>${n}명</span></div>`).join('')}</div>
- <p class="info-now">지금은 1명이 달성해서 <b>+3%</b> 보너스가 적용 중이에요.</p></section>`;
+ <p class="info-now">지금은 1명이 달성해서 <b>+3%</b> 보너스가 적용 중이에요.</p></section>`;}
  const close=el('button','info-close','확인');close.type='button';close.addEventListener('click',()=>d.remove());
  c.append(close);d.append(c);d.addEventListener('click',e=>{if(e.target===d)d.remove()});overlay.append(d);
 }
@@ -133,7 +144,7 @@ function syncPrototypeViewport(){
 
   // Keep the app from suddenly shrinking when the mobile keyboard opens.
   if(!editing || !stableViewportHeight) stableViewportHeight=rawVh;
-  const vh=editing ? Math.max(rawVh,stableViewportHeight) : rawVh;
+  let vh=editing ? Math.max(rawVh,stableViewportHeight) : rawVh;
 
   const horizontalPad=mobile ? 0 : 16;
   const verticalPad=mobile ? 0 : 52; // room for desktop debug controls
@@ -144,7 +155,11 @@ function syncPrototypeViewport(){
      because the device shows its own. Slight aspect differences are absorbed by a tiny vertical stretch. */
   const R=document.documentElement.style;let sx,sy,tx=0,ty=0,cut=0;
   window.__gapTop=0;
+  let sb=0;
+  if(mobile){const pr=document.getElementById('sa-probe')||(()=>{const d=document.createElement('div');d.id='sa-probe';d.style.cssText='position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none';document.body.appendChild(d);return d})();sb=pr.offsetHeight||0}
+  document.documentElement.style.setProperty('--sb',sb+'px');
   if(mobile){
+    vh=vh-sb; /* keep the tab bar above the iPhone home indicator; the strip below is filled white */
     cut=47;const dh=H-cut;sx=vw/W;const need=vh/sx;
     if(need>=dh){sy=sx;ty=vh-dh*sx;window.__gapTop=ty}
     else if(need>=dh*0.95){sy=vh/dh}
@@ -300,17 +315,22 @@ function bindMomentumScroll(el){
    raf=requestAnimationFrame(tick);
  };
 
+ let armed=false,startY0=0;
  el.addEventListener('pointerdown',e=>{
-   if(e.target.closest('button,input,textarea,a'))return;
+   if(e.target.closest('input,textarea'))return;
    stopMomentum();cancelSpring();
-   pid=e.pointerId;lastY=e.clientY;lastT=performance.now();velocity=0;dragging=true;
-   el.classList.add('momentum-dragging');
-   el.setPointerCapture?.(pid);
-   e.preventDefault();
+   pid=e.pointerId;lastY=startY0=e.clientY;lastT=performance.now();velocity=0;dragging=true;armed=false;
  });
 
  el.addEventListener('pointermove',e=>{
    if(!dragging||e.pointerId!==pid)return;
+   if(!armed){
+     if(Math.abs(e.clientY-startY0)<7)return;   /* a tap stays a tap; only a real drag scrolls */
+     armed=true;lastY=e.clientY;lastT=performance.now();
+     el.classList.add('momentum-dragging');el.setPointerCapture?.(pid);
+     el.querySelectorAll('.is-pressed').forEach(x=>x.classList.remove('is-pressed'));
+     return;
+   }
    const now=performance.now();
    const dy=(e.clientY-lastY)/(window.__sy||1);
    const dt=Math.max(1,now-lastT);
@@ -346,6 +366,9 @@ function bindMomentumScroll(el){
 
  const end=e=>{
    if(!dragging||e.pointerId!==pid)return;
+   if(!armed){dragging=false;pid=null;return}
+   armed=false;
+   const kill=ev=>{ev.stopPropagation();ev.preventDefault()};el.addEventListener('click',kill,{capture:true,once:true});setTimeout(()=>el.removeEventListener('click',kill,{capture:true}),80);
    dragging=false;el.classList.remove('momentum-dragging');
    try{el.releasePointerCapture?.(pid)}catch(_){}
    pid=null;
@@ -457,7 +480,7 @@ function goNav(index,target,active){
    {name:'esg',x:236,y:792,w:8,h:8},
    {name:'coupon',x:333,y:775,w:12,h:14}
  ][index];
- const spr=img(`assets/ui/nav_sprout_${pos.name}.png`,'nav-sprout');Object.assign(spr.style,{left:pct(pos.x,W),top:pct(pos.y,H),width:pct(pos.w,W),height:pct(pos.h,H)});overlay.append(spr);
+ window.__navGrow=index;
  transitionMode='fade';
  history.push(JSON.parse(JSON.stringify(view)));view=target;render()
 }
@@ -628,7 +651,7 @@ function renderSheet(){
        routeQr.style.left='79.74%'; routeQr.style.top='84.55%'; routeQr.style.width='15.13%'; routeQr.style.height='8.58%';
      }
      const body=document.createElement('div');body.className='daily-sheet';
-     body.append(img(`assets/daily_headers/${sheet.activity}.png`,'daily-header'));
+     body.append(img(`assets/daily_headers/${sheet.activity}.png`,'daily-header'));hqDaily(body,sheet.activity);
      const heading=document.createElement('div');heading.className='daily-heading';heading.textContent='일일 실천';body.append(heading);
      keys.forEach(key=>{
        const [x,y]=positions[key];const state=key===sheet.activity?'selected':'normal';
@@ -865,7 +888,7 @@ function renderTeam(){
 
  bindMomentumScroll(vp);
  ensureTeamLiveBonus(root);
- {const bl=document.createElement('button');bl.type='button';bl.className='team-bonus-label';bl.innerHTML='달성 인원별 팀 보너스'+ico('info');bl.addEventListener('click',e=>{e.stopPropagation();showTeamInfo()});root.append(bl);}
+ {const bl=document.createElement('button');bl.type='button';bl.className='team-bonus-label';bl.innerHTML='달성 인원별 팀 보너스'+ico('info');bl.addEventListener('click',e=>{e.stopPropagation();showTeamInfo('bonus')});root.append(bl);}
 
  addNav(1);
  if(firstTeam){
@@ -1208,7 +1231,7 @@ function closeTeamChat(page){
 function showIdeaModal(){
  clearTimers();
  const d=document.createElement('div');d.className='modal-dim';
- const card=document.createElement('div');card.className='modal-card';card.append(img('assets/screens/345_clean.png'));
+ const card=document.createElement('div');card.className='modal-card';card.append(img('assets/screens/345_clean.png'));card.append(hqBox(img('assets/hq/idea.png','hq-abs'),HQ_IDEA,338,553));
  const company=document.createElement('input');company.className='modal-input';company.placeholder='기업명을 입력해 주세요.';company.value=form.company;Object.assign(company.style,{left:'8.8%',top:'32.3%',width:'82.5%',height:'7.5%'});
  const idea=document.createElement('textarea');idea.className='modal-input';idea.placeholder='아이디어를 자세히 작성해 주세요.';idea.value=form.idea;Object.assign(idea.style,{left:'8.8%',top:'47.1%',width:'82.5%',height:'17.5%',resize:'none'});
  const bot=document.createElement('button');bot.className='modal-btn';Object.assign(bot.style,{left:'8.8%',top:'82.7%',width:'30.7%',height:'7.7%'});bot.addEventListener('click',()=>{form.company=company.value;form.idea=idea.value;d.remove();setView({type:'chat',kind:'bot'})});
@@ -1317,7 +1340,7 @@ PAGES.stores={title:v=>STORES[v.activity||'tumbler'].title,build(inner,v){
 }};
 
 /* team */
-const TEAM=[['추용하','달성','+32.8kg',0,true],['김혜민','미달성','3.2kg 남음',1],['정진술','미달성','3.2kg 남음',2],['김도훈','미달성','3.2kg 남음',3],['황유빈','미달성','3.2kg 남음',4]];
+const TEAM=[['추용하','달성','+32.8kg',0,true,6],['김혜민','미달성','0.8kg 남음',1,false,4],['정진술','미달성','2.1kg 남음',2,false,3],['김도훈','미달성','3.6kg 남음',3,false,2],['황유빈','미달성','5.4kg 남음',4,false,1]];
 PAGES.teamInfo={title:'팀 정보',build(inner){
  inner.append(el('div','x-hero-card',null));inner.lastChild.innerHTML='<small>우리 팀</small><strong>그린시윗 성수 3팀</strong><span>2026.07.01 결성 · 팀원 5명 · 현재 보너스 +3%</span>';
  inner.append(el('div','x-sec','팀원'));
@@ -1334,7 +1357,7 @@ function openMemberSheet(i){
  const m=TEAM[i];const d=dim('x-sheet-dim');const s=el('div','x-sheet x-member-sheet');
  s.append(img(`assets/team/av_${m[3]}.png`,'x-av big'));s.append(el('strong','x-ms-name',m[0]));
  const st=el('div','x-ms-stat');st.innerHTML=m[4]?`<b class="ok">이번 주 달성</b><span>탄소 잔고 ${m[2]}</span>`:`<b class="bad">이번 주 미달성</b><span>목표까지 ${m[2]}</span>`;s.append(st);
- const wk=el('div','x-week');['월','화','수','목','금','토','일'].forEach((dd,j)=>{const c=el('i',(m[4]?j<5:j<2)?'on':'',dd);wk.append(c)});s.append(wk);
+ const wk=el('div','x-week');['월','화','수','목','금','토','일'].forEach((dd,j)=>{const c=el('i',j<m[5]?'on':'',dd);wk.append(c)});s.append(wk);
  const btn=el('button','x-cta',m[4]?'칭찬 보내기':'응원 보내기');btn.type='button';
  btn.addEventListener('click',()=>{closeDim(d);const hits=stage.querySelectorAll(m[4]?'.team-member-praise':'.team-member-nag');const h=m[4]?hits[0]:hits[i-1];if(h&&!h.disabled)h.click();else showToast('이미 보냈어요.')});
  s.append(btn);d.append(s);
@@ -1449,18 +1472,18 @@ PAGES.contact={title:'문의하기',build(inner){
 
 /* ---------- wrap existing renderers ---------- */
 const _render=render;render=function(){if(view.type==='page'){clearAll();applyStageBackground();renderPage();animateViewIn();return}_render()};
-const _renderHome=renderHome;renderHome=function(){_renderHome();
+const _renderHome=renderHome;renderHome=function(){_renderHome();stage.append(img('assets/team/header-icon.png','x-appicon'));
  tapAt(236,70,36,34,()=>infoBox('매일 2.3kg, 내 탄소 몫','<p>한국인 1인이 하루 생활하며 쓰는 탄소는 평균 약 <b>2.3kg</b>이에요. 이 몫이 매일 탄소 잔고에서 빠지고, 실천으로 줄인 만큼 다시 채워져요.</p><p>잔고가 0kg 이상이면 지구 캐릭터가 건강해지고 리워드를 받아요.</p>'),'help');
  tapAt(18,540,354,82,()=>infoBox('오늘 예상 리워드 300P','<section><h4>이렇게 계산돼요</h4><p>기본 실천 리워드 <b>290P</b> + 팀 보너스 3% <b>9P</b> ≈ <b>300P</b></p><p>이번 주 탄소 잔고가 0kg 이상이면 오늘 자정에 적립돼요.</p></section>'),'reward');
 };
-const _renderCarbon=renderCarbon;renderCarbon=function(s){_renderCarbon(s);tapAt(250,70,36,34,()=>infoBox('매일 2.3kg, 내 탄소 몫','<p>하루 생활하며 쓰는 탄소 <b>2.3kg</b>이 잔고에서 빠지고, 실천으로 줄인 만큼 채워져요. 옆으로 밀어 단계별 지구 상태를 확인해 보세요.</p>'),'help')};
-const _renderTeam=renderTeam;renderTeam=function(){_renderTeam();
+const _renderCarbon=renderCarbon;renderCarbon=function(s){_renderCarbon(s);stage.append(img('assets/team/header-icon.png','x-appicon'));tapAt(250,70,36,34,()=>infoBox('매일 2.3kg, 내 탄소 몫','<p>하루 생활하며 쓰는 탄소 <b>2.3kg</b>이 잔고에서 빠지고, 실천으로 줄인 만큼 채워져요. 옆으로 밀어 단계별 지구 상태를 확인해 보세요.</p>'),'help')};
+const _renderTeam=renderTeam;renderTeam=function(){_renderTeam();{const r=stage.querySelector('.team-page');const base=r.querySelector('.team-fixed-base');const m=hqBox(img('assets/hq/team_mascot.png','hq-abs hq-team'),HQ_TEAM,390,844);base.after(m);}
  tapAt(344,58,40,44,openTeamMenu,'team-menu');
  const vp=stage.querySelector('.team-scroll-viewport');if(vp)enableTapThrough(vp,'.tl-card',c=>{const cards=[...stage.querySelectorAll('.tl-card')];openMemberSheet(cards.indexOf(c))});
 };
 const _openTeamChatOverlay=openTeamChatOverlay;openTeamChatOverlay=function(){_openTeamChatOverlay();const page=stage.querySelector('.team-chat-overlay');if(page)page.append(makeTap(338,56,46,46,()=>actionSheet('채팅방 설정',[{label:gs.chatMute?'채팅 알림 켜기':'채팅 알림 끄기',fn:()=>{gs.chatMute=!gs.chatMute;showToast(gs.chatMute?'채팅 알림을 껐어요.':'채팅 알림을 켰어요.')}},{label:'대화 내용 지우기',danger:true,fn:()=>confirmBox('대화 내용을 지울까요?','내 기기에서만 지워져요.','지우기',()=>{chatLogs.team.length=0;page.querySelector('.chat-log').innerHTML='';showToast('대화 내용을 지웠어요.')},true)}]),'x-tap chat-gear'))};
 const _renderESG=renderESG;renderESG=function(t){_renderESG(t);
- const root=stage.querySelector('.esg-page');
+ const root=stage.querySelector('.esg-page');hqEsg(root);
  [...stage.querySelectorAll('.esg-post-card')].forEach((c,i)=>c.dataset.o=i);
  tapAt(338,272,42,40,()=>actionSheet('정렬',[{label:'최신순',fn:()=>sortEsg('new')},{label:'공감 많은 순',fn:()=>sortEsg('like')},{label:'전달 임박 순',fn:()=>sortEsg('close')}]),'esg-filter',root);
  tapAt(172,190,136,28,()=>go('esgCases'),'esg-more',root);
@@ -1533,8 +1556,8 @@ const ICON={
  bolt:'<path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/>',
  drop:'<path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/>',
  fire:'<path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>',
- search:'<path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>',
- tune:'<path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>',
+ search:'<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></g>',
+ tune:'<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></g>',
  info:'<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>'
 };
 const ico=(n,cls='')=>`<svg class="mi ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
@@ -1589,6 +1612,130 @@ function updateTopFill(){
  R.style.setProperty('--topfill',col);
 }
 {const _r2=render;render=function(){_r2();requestAnimationFrame(updateTopFill)};window.addEventListener('resize',()=>setTimeout(updateTopFill,80));}
+
+/* ===================== Exhibition mode =====================
+   - idle for N seconds -> countdown -> soft reset to the first screen
+   - app-like behaviour: device back button walks back inside the app and exits only from the first screen,
+     no pinch/double-tap zoom, no long-press callout, screen kept awake while open
+   - admin: long-press the top-left corner 3s -> PIN -> settings (idle time, reset now, PIN) */
+const KIOSK_KEY='gs.kiosk.v2';
+const kiosk=(()=>{let s={};try{s=JSON.parse(localStorage.getItem(KIOSK_KEY)||'{}')}catch(_){}
+ return Object.assign({idle:90,pin:'0000'},s)})();
+const saveKiosk=()=>{try{localStorage.setItem(KIOSK_KEY,JSON.stringify(kiosk))}catch(_){}};
+const INIT={gs:JSON.stringify(gs),mine:JSON.stringify(couponMineItems),points:JSON.stringify(pointsHistory),notify:JSON.stringify(MY_NOTIFY)};
+function kioskReset(){
+ const g=JSON.parse(INIT.gs);Object.keys(gs).forEach(k=>delete gs[k]);Object.assign(gs,g);
+ couponMineItems.splice(0,couponMineItems.length,...JSON.parse(INIT.mine));
+ pointsHistory.splice(0,pointsHistory.length,...JSON.parse(INIT.points));
+ MY_NOTIFY.splice(0,MY_NOTIFY.length,...JSON.parse(INIT.notify));
+ chatLogs.team.length=0;chatLogs.bot.length=0;form.company='';form.idea='';couponSort='hot';botTurn=0;
+ document.querySelectorAll('.kz-layer').forEach(e=>e.remove());
+ transitionMode='fade';
+ document.getElementById('restartBtn').click();
+}
+const kEl=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+
+/* ---- idle reset ---- */
+let kIdleTimer=null,kWarnTimer=null,kWarnEl=null;
+const atStart=()=>view.type==='screen'||(view.type==='onboarding'&&onboardingIndex===0);
+function kArmIdle(){
+ clearTimeout(kIdleTimer);if(!kiosk.idle)return;
+ kIdleTimer=setTimeout(()=>{if(atStart()||document.querySelector('.kz-admin,.kz-pin')){kArmIdle();return}kWarn()},kiosk.idle*1000);
+}
+function kWarn(){
+ let n=10;kWarnEl=kEl('div','kz-layer kz-warn',`<div class="kz-warn-card"><div class="kz-count">${n}</div><strong>잠시 후 처음 화면으로 돌아가요</strong><p>한동안 화면을 터치하지 않아서<br>다음 관람객을 위해 처음으로 돌아갈게요.</p><button type="button">계속 둘러보기</button></div>`);
+ document.body.append(kWarnEl);const cnt=kWarnEl.querySelector('.kz-count');
+ kWarnTimer=setInterval(()=>{n--;cnt.textContent=n;if(n<=0){kCancelWarn();kioskReset();kArmIdle()}},1000);
+}
+function kCancelWarn(){clearInterval(kWarnTimer);kWarnTimer=null;kWarnEl?.remove();kWarnEl=null}
+['pointerdown','keydown','wheel','touchstart'].forEach(t=>document.addEventListener(t,()=>{if(kWarnEl)kCancelWarn();kArmIdle()},{capture:true,passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')kArmIdle()});
+
+/* ---- app-like behaviour ---- */
+let kWake=null;
+async function kWakeLock(){try{if('wakeLock' in navigator&&!kWake&&document.visibilityState==='visible'){kWake=await navigator.wakeLock.request('screen');kWake.addEventListener('release',()=>kWake=null)}}catch(_){}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')kWakeLock()});
+document.addEventListener('pointerup',kWakeLock,{capture:true,passive:true});
+/* device / browser back: go back inside the app; leave the app only from the first screen */
+window.history.replaceState({gs:'root'},'');window.history.pushState({gs:'app'},'');
+window.addEventListener('popstate',()=>{
+ const layer=document.querySelector('.kz-layer');if(layer){layer.remove();window.history.pushState({gs:'app'},'');return}
+ const dimEl=overlay.querySelector('.x-dim,.modal-dim');if(dimEl){dimEl.remove();window.history.pushState({gs:'app'},'');return}
+ if(history.length&&!atStart()){back();window.history.pushState({gs:'app'},'');return}
+ /* at the first screen: let the next back press close the app */
+});
+document.addEventListener('contextmenu',e=>{if(!/^(INPUT|TEXTAREA)$/.test(e.target.tagName))e.preventDefault()});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+let kLastTouch=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-kLastTouch<320&&!/^(INPUT|TEXTAREA)$/.test(e.target.tagName))e.preventDefault();kLastTouch=t},{passive:false});
+
+/* ---- admin: long-press top-left corner 3s ---- */
+let kPressT=null,kPressX=0,kPressY=0,kSuppress=false;
+document.addEventListener('pointerdown',e=>{
+ if(e.clientX>72||e.clientY>72)return;kPressX=e.clientX;kPressY=e.clientY;
+ clearTimeout(kPressT);kPressT=setTimeout(()=>{kSuppress=true;kPin()},3000);
+},{capture:true});
+const kCancelPress=e=>{if(e&&e.type==='pointermove'&&Math.hypot(e.clientX-kPressX,e.clientY-kPressY)<14)return;clearTimeout(kPressT);kPressT=null};
+['pointermove','pointerup','pointercancel'].forEach(t=>document.addEventListener(t,kCancelPress,{capture:true}));
+document.addEventListener('click',e=>{if(kSuppress){kSuppress=false;e.stopPropagation();e.preventDefault()}},{capture:true});
+function kPin(onOk,title='관리자 확인',sub='관리자 PIN 4자리를 입력하세요'){
+ if(document.querySelector('.kz-pin'))return;
+ let v='';const L=kEl('div','kz-layer kz-pin',`<div class="kz-pin-card"><strong>${title}</strong><p>${sub}</p><div class="kz-dots"><i></i><i></i><i></i><i></i></div><div class="kz-keys"></div></div>`);
+ const keys=L.querySelector('.kz-keys'),dots=[...L.querySelectorAll('.kz-dots i')];
+ const paint=()=>dots.forEach((d,i)=>d.classList.toggle('on',i<v.length));
+ ['1','2','3','4','5','6','7','8','9','취소','0','⌫'].forEach(k=>{const b=kEl('button','kz-key'+(k.length>1?' fn':''),k);b.type='button';
+  b.addEventListener('click',ev=>{ev.stopPropagation();
+   if(k==='취소'){L.remove();return}
+   if(k==='⌫'){v=v.slice(0,-1);paint();return}
+   if(v.length<4){v+=k;paint()}
+   if(v.length===4)setTimeout(()=>{
+     if(onOk){L.remove();onOk(v);return}
+     if(v===kiosk.pin){L.remove();kAdmin()}
+     else{const c=L.querySelector('.kz-pin-card');c.classList.add('shake');setTimeout(()=>{c.classList.remove('shake');v='';paint()},420)}
+   },120);
+  });keys.append(b)});
+ document.body.append(L);
+}
+function kAdmin(){
+ document.querySelector('.kz-admin')?.remove();
+ const opts=[[30,'30초'],[60,'1분'],[90,'1분 30초'],[180,'3분'],[0,'끄기']];
+ const L=kEl('div','kz-layer kz-admin',`<div class="kz-admin-card">
+  <div class="kz-admin-head"><strong>관리자 모드</strong><button type="button" class="kz-x" aria-label="닫기">✕</button></div>
+  <div class="kz-label">터치가 없으면 처음 화면으로</div>
+  <div class="kz-chips">${opts.map(([s,l])=>`<button type="button" data-s="${s}" class="x-chip ${kiosk.idle===s?'on':''}">${l}</button>`).join('')}</div>
+  <button type="button" class="kz-btn kz-reset">지금 처음 화면으로</button>
+  <button type="button" class="kz-btn ghost kz-pinchg">관리자 PIN 변경</button></div>`);
+ document.body.append(L);
+ L.querySelector('.kz-x').addEventListener('click',()=>L.remove());
+ L.querySelectorAll('.kz-chips .x-chip').forEach(c=>c.addEventListener('click',()=>{kiosk.idle=+c.dataset.s;saveKiosk();L.querySelectorAll('.kz-chips .x-chip').forEach(x=>x.classList.toggle('on',x===c));kArmIdle()}));
+ L.querySelector('.kz-reset').addEventListener('click',()=>{L.remove();kioskReset()});
+ L.querySelector('.kz-pinchg').addEventListener('click',()=>kPin(a=>kPin(b=>{if(a===b){kiosk.pin=a;saveKiosk();showToast('관리자 PIN을 바꿨어요.')}else showToast('두 번 입력한 PIN이 달라요.')},'PIN 확인','한 번 더 입력하세요'),'새 PIN','새 관리자 PIN 4자리를 입력하세요'));
+}
+try{localStorage.removeItem('gs.kiosk.v1')}catch(_){}
+kArmIdle();kWakeLock();
+
+/* ===== hi-res illustrations (replacing blurry baked art) ===== */
+const HQ_DAILY={"walk": {"box": [274.2, 46.5, 99.6, 99.6], "chipL": 237}, "bike": {"box": [274.2, 40.6, 97.3, 97.3], "chipL": 204}, "bus": {"box": [259.7, 49.7, 99.3, 99.3], "chipL": 199}, "partial": {"box": [272.4, 45.0, 100.6, 100.6], "chipL": 220}, "fullveg": {"box": [274.1, 39.4, 98.5, 98.5], "chipL": 213}, "tumbler": {"box": [281.2, 41.9, 98.5, 98.5], "chipL": 204}};
+function hqBox(el,[l,t,w,h],W,H){Object.assign(el.style,{left:(l/W*100)+'%',top:(t/H*100)+'%',width:(w/W*100)+'%',height:(h/H*100)+'%'});return el}
+function hqDaily(body,key){
+ const c=HQ_DAILY[key];if(!c)return;
+ body.append(hqBox(img(`assets/hq/daily_${key}.png`,'hq-daily-mascot'),c.box,390,687));
+ const chip=img(`assets/daily_headers/${key}.png`,'daily-header hq-chipcopy');
+ chip.style.clipPath=`inset(${124/291*100}% ${(390-357)/390*100}% ${(291-153)/291*100}% ${(c.chipL-3)/390*100}%)`;body.append(chip);
+}
+function hqEsg(root){
+ const w=el('div','hq-esg-wrap');w.append(hqBox(img('assets/hq/esg_mascot.png','hq-abs'),[17.3, 156.6, 125.9, 87.3],160,229),hqBox(img('assets/hq/esg_done_text.png','hq-abs'),[75.2, 131.2, 56.9, 37.9],160,229));root.append(w);
+}
+const HQ_TEAM=[46.9, 69.3, 318.1, 238.6], HQ_IDEA=[153.3, 7.0, 169.0, 169.0];
+
+/* ---- tab bar sprouts: crisp vector sprout, grows when a tab is chosen ---- */
+const SPROUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.4 23c.2-4.6.1-8 .9-11.2" fill="none" stroke="#1fbf3a" stroke-width="2.4" stroke-linecap="round"/><path d="M11.9 14.2C7.6 14.9 3.6 12.5 2.6 8.3c4.3-.9 8.6 1.4 9.3 5.9z" fill="#1fbf3a"/><path d="M12.2 11.6C12 6.4 15.9 2.3 21.4 1.8c.5 5.4-3.6 9.7-9.2 9.8z" fill="#28cf45"/></svg>';
+const SPROUT_POS=[{x:64,y:774,w:14,h:14,r:14},{x:163,y:789,w:17,h:17,r:62},{x:233,y:788,w:14,h:14,r:0},{x:331,y:772,w:16,h:16,r:28}];
+const _addNav=addNav;addNav=function(active,...rest){_addNav(active,...rest);
+ const p=SPROUT_POS[active];if(!p)return;
+ const s=el('div','nav-sprout-live'+(window.__navGrow===active?' grow':''));s.innerHTML=SPROUT;
+ Object.assign(s.style,{left:p.x+'px',top:p.y+'px',width:p.w+'px',height:p.h+'px','--r':p.r+'deg'});
+ stage.append(s);window.__navGrow=null;
+};
 
 render();
 })();
