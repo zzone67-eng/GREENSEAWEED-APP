@@ -159,7 +159,7 @@ function syncPrototypeViewport(){
   if(mobile){const pr=document.getElementById('sa-probe')||(()=>{const d=document.createElement('div');d.id='sa-probe';d.style.cssText='position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none';document.body.appendChild(d);return d})();sb=pr.offsetHeight||0}
   document.documentElement.style.setProperty('--sb',sb+'px');
   if(mobile){
-    vh=vh-sb; /* keep the tab bar above the iPhone home indicator; the strip below is filled white */
+    /* the 390x844 design already includes the home-indicator zone (80px tab bar), so no extra strip is reserved */
     cut=47;const dh=H-cut;sx=vw/W;const need=vh/sx;
     if(need>=dh){sy=sx;ty=vh-dh*sx;window.__gapTop=ty}
     else if(need>=dh*0.95){sy=vh/dh}
@@ -1753,7 +1753,7 @@ const NAV_CX=[62,151,239,326];
    it.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg>`+(i===active?`<span>${NAV_LABELS[i]}</span>`:'');nav.append(it)});
  stage.append(nav);
 }}
-SPROUT_POS.splice(0,4,{x:63,y:776,w:14,h:14,r:18},{x:161,y:790,w:15,h:15,r:62},{x:233,y:787,w:12,h:12,r:0},{x:324,y:778,w:15,h:15,r:24});
+SPROUT_POS.splice(0,4,{x:63,y:770,w:14,h:14,r:18},{x:161,y:784,w:15,h:15,r:62},{x:233,y:781,w:12,h:12,r:0},{x:324,y:772,w:15,h:15,r:24});
 
 /* ===== status bar for the desktop mock (phones show their own) ===== */
 const SB_ICONS='<svg viewBox="0 0 68 14" aria-hidden="true"><g fill="currentColor"><rect x="0" y="9" width="3" height="4" rx=".8"/><rect x="4.6" y="7" width="3" height="6" rx=".8"/><rect x="9.2" y="4.5" width="3" height="8.5" rx=".8"/><rect x="13.8" y="2" width="3" height="11" rx=".8"/><path d="M30 3.2c2.6 0 5 1 6.8 2.7l1.4-1.5A11.6 11.6 0 0 0 30 1.2a11.6 11.6 0 0 0-8.2 3.2l1.4 1.5A9.6 9.6 0 0 1 30 3.2zm0 3.8c1.6 0 3 .6 4.1 1.6l1.4-1.5A8 8 0 0 0 30 5a8 8 0 0 0-5.5 2.1l1.4 1.5A6 6 0 0 1 30 7zm0 3.6c-.7 0-1.4.3-1.9.7L30 13.2l1.9-1.9c-.5-.4-1.2-.7-1.9-.7z"/><rect x="44" y="1.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".45"/><rect x="45.8" y="3.3" width="17.4" height="7.4" rx="1.6"/><rect x="66" y="5.2" width="1.6" height="3.6" rx=".8" opacity=".45"/></g></svg>';

@@ -3678,3 +3678,6 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 /* guides close by tapping outside only */
 .guide-close-icon{display:none!important}
 .guide-close-hit{pointer-events:none!important;opacity:0!important}
+/* tab bar content sits a little higher so labels clear the home indicator; the bar itself reaches the screen edge */
+html.app-fill body::after,.x-strip-dim{display:none!important}
+.live-nav-item svg{margin-top:15px!important}
