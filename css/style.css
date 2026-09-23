@@ -3436,7 +3436,7 @@ html.app-fill input,html.app-fill textarea{-webkit-user-select:text;user-select:
 .kz-help summary{font-weight:600;color:var(--on-surface);padding:8px 0;cursor:pointer}
 .kz-help p{margin:8px 0}
 .kz-guide p.kz-os{font-size:13px!important;text-align:left;background:var(--surface-cont);border-radius:12px;padding:12px 14px;margin:0 0 10px!important}
-html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;height:var(--sb,0px);background:#fff;z-index:5;pointer-events:none}
+html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;height:var(--sb,0px);background:var(--strip,#fff);z-index:5;pointer-events:none;transition:background-color .2s ease}
 
 /* ===== round 2 fixes ===== */
 /* home: reward/help hotspots stay under the practice sheet */
@@ -3669,3 +3669,9 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .x-cover-out{opacity:0}
 .x-hold{z-index:6}
 .stage.x-wait{visibility:hidden}
+.x-strip-dim{position:fixed;left:0;right:0;bottom:0;height:var(--sb,0px);background:#000;opacity:0;z-index:6;pointer-events:none;transition:opacity .2s ease}
+.x-guide-ok{position:absolute;left:12%;width:76%;height:44px;border:0;border-radius:999px;background:var(--primary);color:#fff;font:700 15px/44px var(--gs-font);letter-spacing:-.01em;z-index:8;cursor:pointer;box-shadow:0 4px 12px rgba(24,199,53,.3);opacity:0;animation:guideOk .32s .35s cubic-bezier(.2,1.2,.3,1) forwards}
+@keyframes guideOk{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.x-guide-ok:active{transform:scale(.97)}
+.x-guide-hint{position:absolute;left:0;right:0;top:66px;text-align:center;color:rgba(255,255,255,.82);font:500 12px/16px var(--gs-font);z-index:9;pointer-events:none;opacity:0;animation:guideOk .3s .6s ease forwards}
+.guide.closing .x-guide-hint,.guide.closing .x-guide-ok{opacity:0!important;transition:opacity .15s}

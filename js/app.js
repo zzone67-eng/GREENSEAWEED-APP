@@ -1985,6 +1985,40 @@ ICON.close2='<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="
 }}
 /* the push/pop animation also waits for decode */
 
+/* ===== home-indicator strip follows the screen (like a native tab bar / sheet extending under it) ===== */
+function paintIndicatorStrip(){
+ let c='#ffffff';
+ if(view.type==='carbon'||stage.querySelector('.team-chat-overlay')||view.type==='screen'&&view.screen===287)c=view.type==='screen'?'#062a10':'#1cc430';
+ const dims=[...overlay.querySelectorAll('.modal-dim,.guide')].filter(d=>d.isConnected);
+ const sheetOpen=overlay.querySelector('.x-as-sheet,.x-sheet-dim,.x-compose,.x-done');
+ if(overlay.querySelector('.x-compose,.x-done'))c='#ffffff';
+ else if(dims.length&&!sheetOpen){c=c==='#1cc430'?'#107220':'#949494'}
+ document.documentElement.style.setProperty('--strip',c);
+}
+{const _r6=render;render=function(){_r6();paintIndicatorStrip()}}
+new MutationObserver(paintIndicatorStrip).observe(overlay,{childList:true,subtree:false});
+new MutationObserver(()=>paintIndicatorStrip()).observe(stage,{childList:true});
+
+/* dim the home-indicator strip together with guides / dialogs (fixed element outside the scaled phone) */
+{const sd=document.createElement('div');sd.className='x-strip-dim';document.body.append(sd);
+ const upd=()=>{let a=0;
+   const g=overlay.querySelector('.guide:not(.closing)');
+   const sheet=overlay.querySelector('.x-as-sheet,.x-sheet-dim,.x-compose,.x-done');
+   if(g)a=.69;else if(!sheet&&[...overlay.querySelectorAll('.modal-dim')].some(d=>!d.classList.contains('out')))a=.42;
+   sd.style.opacity=String(a);};
+ new MutationObserver(upd).observe(overlay,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+ const _r7=render;render=function(){_r7();upd()};}
+
+/* ===== first-visit guides: big "got it" button + tap anywhere to close ===== */
+{const _sg=showGuide;showGuide=function(kind){_sg(kind);
+ const g=overlay.querySelector('.guide');if(!g)return;const bubble=g.querySelector('.guide-bubble');const x=g.querySelector('.guide-close-hit');if(!bubble||!x)return;
+ const ok=el('button','x-guide-ok',kind==='home'?'알겠어요, 시작할게요':'알겠어요');ok.type='button';ok.style.top=(kind==='home'?86.2:83.2)+'%';
+ ok.addEventListener('click',e=>{e.stopPropagation();buzz(8);x.click()});bubble.append(ok);
+ let armed=false;setTimeout(()=>armed=true,450);   /* avoid closing from the tap that opened the screen */
+ g.addEventListener('click',e=>{if(!armed||e.target.closest('.x-guide-ok,.guide-close-hit'))return;x.click()});
+
+}}
+
 render();
 })();
 
