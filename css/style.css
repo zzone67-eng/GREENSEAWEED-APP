@@ -3508,3 +3508,4 @@ html.app-fill body::after{content:'';position:fixed;left:0;right:0;bottom:0;heig
 .m3-switch:not(.on){border-width:1.5px;border-color:#cfd3cf;background:#f4f5f4}
 .m3-switch:not(.on) i{width:14px;height:14px;margin-top:-7px;left:7px;background:#c3c7c3}
 .team-new-achievement.toast-only .team-new-toast{top:-300px!important}
+.team-member-praise.action-sent::after,.team-member-nag.action-sent::after{right:13px!important;top:13px!important;width:18px!important;height:18px!important;font-size:11px!important;box-shadow:0 1px 4px rgba(0,0,0,.12)!important}
