@@ -1928,14 +1928,16 @@ showIdeaModal=function(opts={}){
  const send=el('button','x-send','제출');send.type='button';
  bar.append(img('assets/team/statusbar.png','x-status'),x,el('h2','','아이디어 제안'),send);
  const body=el('div','x-cbody');
- const hero=el('div','x-chero');hero.innerHTML='<div><small>기업에게 도움이 되는</small><strong><em>ESG 아이디어</em>를<br>제출해 주세요</strong></div>';hero.append(img('assets/hq/idea.png','x-chero-img'));
+ const hero=el('div','x-chead');hero.innerHTML='<div><h3>기업에 전할<br><em>ESG 아이디어</em>를 들려주세요</h3><p>공감 1,000명이 모이면 실제 기업에 전달돼요</p></div>';hero.append(img('assets/hq/idea.png','x-chead-img'));
  const f1=el('label','m3-field single');const inp=el('input');inp.placeholder=' ';inp.maxLength=30;inp.value=form.company||'';f1.append(inp,el('span','','전달할 기업'));
  const chips=el('div','x-chips x-cchips');IDEA_COMPANIES.forEach(c=>{const b=el('button','x-chip',c);b.type='button';b.addEventListener('click',()=>{inp.value=c;sync();chips.querySelectorAll('.x-chip').forEach(z=>z.classList.toggle('on',z===b))});chips.append(b)});
  const f2=el('label','m3-field');const ta=el('textarea');ta.rows=6;ta.placeholder=' ';ta.maxLength=300;ta.value=form.idea||'';f2.append(ta,el('span','','전달할 내용'));
  const cnt=el('div','x-count');
- const bot=el('button','x-botcard');bot.type='button';bot.innerHTML='<span class="x-botcard-av"></span><span><strong>그리니와 아이디어 다듬기</strong><small>머릿속 아이디어를 글로 만들어 드릴게요</small></span>'+ico('chev','trail');
+ const bot=el('button','x-botcard');bot.type='button';bot.innerHTML='<span class="x-botcard-av"></span><span><strong>어떻게 써야 할지 막막하다면?</strong><small>그리니가 아이디어를 글로 정리해 드려요</small></span>'+ico('chev','trail');
  bot.querySelector('.x-botcard-av').append(img('assets/team/bot_av.png'));
- body.append(hero,f1,chips,f2,cnt,bot,el('p','x-note','제출한 아이디어는 운영팀 심사 후 게시판에 올라가고, 공감 1,000명이 모이면 기업에 전달돼요.'));
+ const q1=el('div','x-cq','<b>1</b>어떤 기업에 제안할까요?'),q2=el('div','x-cq','<b>2</b>어떤 변화를 제안할까요?');q1.innerHTML='<b>1</b>어떤 기업에 제안할까요?';q2.innerHTML='<b>2</b>어떤 변화를 제안할까요?';
+ const sec1=el('section','x-csec'),sec2=el('section','x-csec');sec1.append(q1,f1,chips);sec2.append(q2,f2,cnt);
+ body.append(hero,sec1,sec2,bot);
  const foot=el('div','x-cfoot');const cta=el('button','x-cta','제출하기');cta.type='button';foot.append(cta);
  L.append(bar,body,foot);overlay.append(L);
  function sync(){form.company=inp.value;form.idea=ta.value;const ok=inp.value.trim().length>0&&ta.value.trim().length>=5;send.disabled=!ok;cta.disabled=!ok;cta.classList.toggle('disabled',!ok);cnt.textContent=`${ta.value.length} / 300`}
@@ -2177,6 +2179,39 @@ function hqMonthly(content){
    let x=s.querySelector(':scope>.x-sheet-x');if(!x){x=el('div','x-sheet-x');x.innerHTML='<svg viewBox="0 0 24 24"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>';s.appendChild(x)}
    const top=parseFloat(s.style.top)/100*844;const open=top<690;if(x.classList.contains('show')!==open)x.classList.toggle('show',open)})};
  new MutationObserver(upd).observe(stage,{subtree:true,childList:true,attributes:true,attributeFilter:['style']});}
+
+/* monthly '이번달 절감 현황' rows open a detail sheet */
+{const _hm=hqMonthly;hqMonthly=function(content){_hm(content);
+ const rows=[['전기세',6000,7200,'+0.86kg'],['가스비',5000,2467,'+1.12kg'],['수도세',3000,0,'+0.28kg']];
+ rows.forEach(([t,goal,cur,kg],i)=>{
+   const b=el('button','x-mo-row');b.type='button';b.setAttribute('aria-label',t+' 절감 현황');
+   Object.assign(b.style,{left:(20/390*100)+'%',top:((322+i*110)/688*100)+'%',width:(350/390*100)+'%',height:(102/688*100)+'%'});
+   b.addEventListener('click',()=>{buzz(8);const p=Math.min(100,Math.round(cur/goal*100));const done=cur>=goal;
+     infoBox(`이번달 ${t} 절감 현황`,`<div class="x-mo-info"><div class="x-mo-num"><b>${fmt(cur)}원</b><span>/ 목표 ${fmt(goal)}원</span></div><div class="x-mo-track"><i style="width:${p}%"></i></div><p>${done?`목표를 달성했어요! 다음달 매주 월요일 <b>${kg}</b>이 자동으로 지급돼요.`:`목표까지 <b>${fmt(goal-cur)}원</b> 남았어요. 달성하면 다음달 매주 월요일 <b>${kg}</b>이 지급돼요.`}</p><p class="info-now">연동된 고지서 기준으로 매일 새벽에 갱신돼요.</p></div>`,'확인')});
+   content.append(b)});
+}}
+
+/* ===================== carbon stage preview: livelier mascot + slider-style gauge ===================== */
+const STAGE_GLOW=['#ff7a70','#ff9d7c','#ffc48c','#8fdcef','#86e3a0','#4fd46f'];
+const STAGE_EMO=['😵','😣','😟','🙂','😊','🥰'];
+{const _rc2=renderCarbon;renderCarbon=function(s){_rc2(s);
+ const fig=stage.querySelector('.carbon17-figure-stage');if(!fig)return;
+ const glow=el('div','x-cb-glow');fig.prepend(glow);
+ const idx=()=>{const t=stage.querySelector('.carbon17-step')?.textContent||'';const n=parseInt(t,10);return isNaN(n)?3:Math.max(0,Math.min(5,n-1))};
+ let last=-1;
+ const paint=(anim)=>{const i=idx();glow.style.setProperty('--g',STAGE_GLOW[i]);
+   if(anim&&i!==last){const m=fig.querySelector('.carbon17-mascot-single.is-current');if(m){m.classList.remove('x-cb-in');void m.offsetWidth;m.classList.add('x-cb-in')}
+     const st=stage.querySelector('.carbon17-status');if(st){st.classList.remove('x-cb-pop');void st.offsetWidth;st.classList.add('x-cb-pop')}}
+   last=i};
+ paint(false);
+ new MutationObserver(()=>paint(true)).observe(stage.querySelector('.carbon17-status')||stage,{subtree:true,childList:true,characterData:true});
+ /* tap the mascot: it hops and shows how it feels */
+ let d0=null;
+ fig.addEventListener('pointerdown',e=>{d0=[e.clientX,e.clientY]});
+ fig.addEventListener('pointerup',e=>{if(!d0)return;const moved=Math.hypot(e.clientX-d0[0],e.clientY-d0[1]);d0=null;if(moved>8)return;
+   const m=fig.querySelector('.carbon17-mascot-single.is-current');if(!m)return;m.classList.remove('x-cb-tap');void m.offsetWidth;m.classList.add('x-cb-tap');buzz(8);
+   const emo=el('span','x-cb-emo',STAGE_EMO[idx()]);emo.style.left=(40+Math.random()*20)+'%';fig.append(emo);setTimeout(()=>emo.remove(),1100)});
+}}
 
 render();
 })();

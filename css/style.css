@@ -3825,3 +3825,62 @@ html,body,body *:not(.bc-num){font-family:var(--gs-font)!important}
 .x-sheet-x svg{width:100%;height:100%;display:block}
 .x-cover{z-index:85!important}
 .team-live-bonus-value{animation:none!important;text-shadow:none!important}
+
+/* daily cards: calm selection (no confetti sparkles / pop-up chip) */
+.daily-sparkle,.daily-fun-chip{display:none!important}
+.daily-card.selected-pop{animation:cardSel .26s cubic-bezier(.2,.8,.2,1)!important}
+@keyframes cardSel{0%{transform:scale(.965)}100%{transform:scale(1)}}
+/* monthly rows */
+.x-mo-row{position:absolute;z-index:4;border:0;background:transparent;border-radius:16px;padding:0;cursor:pointer;transition:background .15s,transform .15s}
+.x-mo-row:active{background:rgba(0,0,0,.04);transform:scale(.985)}
+.x-mo-num{display:flex;align-items:baseline;gap:6px;margin:4px 0 10px}
+.x-mo-num b{font-size:26px;line-height:32px;font-weight:800;color:var(--primary-text)}
+.x-mo-num span{font-size:14px;color:var(--on-surface-var)}
+.x-mo-track{height:8px;border-radius:999px;background:#e8ebe8;overflow:hidden;margin-bottom:14px}
+.x-mo-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#16b733,#2bd84a);animation:moTrack .8s cubic-bezier(.25,.8,.25,1) both}
+@keyframes moTrack{from{width:0}}
+/* My page: no box outlines */
+.my-live .x-group{border:0!important;border-radius:0!important;background:transparent!important}
+.my-live .x-group .x-li{padding-left:4px!important;padding-right:4px!important}
+.my-live .x-group .x-li+.x-li::before{left:4px!important;right:4px!important}
+/* idea compose: clear hierarchy */
+.x-chead{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin:4px 0 28px}
+.x-chead h3{margin:0;font-size:23px;line-height:32px;font-weight:800;letter-spacing:-.03em;color:#1a1c1a}
+.x-chead h3 em{font-style:normal;color:var(--primary-text)}
+.x-chead p{margin:8px 0 0;font-size:14px;line-height:20px;color:var(--on-surface-var)}
+.x-chead-img{width:78px;height:78px;object-fit:contain;flex:0 0 78px}
+.x-csec{margin-bottom:26px}
+.x-cq{display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;font-weight:700;color:#1a1c1a;margin-bottom:12px}
+.x-cq b{width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;line-height:22px;text-align:center;font-weight:800;flex:0 0 22px}
+.x-csec .x-cchips{margin:10px 0 0}
+.x-csec .x-count{margin:6px 4px 0}
+.x-botcard{background:#f5f7f5!important;padding:12px 14px!important}
+.x-botcard strong{font-size:14px!important;line-height:20px!important}
+
+/* ===== carbon preview ===== */
+.x-cb-glow{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--g,#8fdcef) 38%,transparent) 0%,transparent 68%);transition:background .6s ease;pointer-events:none;z-index:0;animation:glowBreath 4s ease-in-out infinite}
+@keyframes glowBreath{0%,100%{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}
+.carbon17-mascot-single{position:relative;z-index:1}
+.carbon17-mascot-single.x-cb-in{animation:cbIn .55s cubic-bezier(.2,1.35,.35,1)}
+@keyframes cbIn{0%{transform:scale(.88) translateY(10px);opacity:.4}60%{transform:scale(1.03)}100%{transform:none;opacity:1}}
+.carbon17-mascot-single.x-cb-tap{animation:cbTap .6s cubic-bezier(.3,1.4,.4,1)}
+@keyframes cbTap{0%{transform:none}25%{transform:translateY(-16px) scale(1.03,.97)}55%{transform:translateY(0) scale(1.05,.94)}100%{transform:none}}
+.x-cb-emo{position:absolute;top:18%;z-index:3;font-size:30px;line-height:1;pointer-events:none;animation:emoUp 1.1s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes emoUp{0%{opacity:0;transform:translateY(10px) scale(.6)}20%{opacity:1;transform:translateY(0) scale(1.1)}100%{opacity:0;transform:translateY(-40px) scale(1)}}
+.carbon17-status.x-cb-pop{animation:cbPop .42s cubic-bezier(.2,1.5,.35,1)}
+@keyframes cbPop{0%{transform:scale(.94)}100%{transform:none}}
+/* gauge: dots on the bar + a slider knob instead of map pins */
+.carbon17-faint-marker{background:#fff!important;width:8px!important;height:8px!important;top:26.5px!important;margin-left:6px!important;border-radius:50%!important;opacity:.95!important;box-shadow:0 0 0 1.5px rgba(0,0,0,.07)!important}
+.carbon17-pin{background:#fff!important;width:26px!important;height:26px!important;top:527.5px!important;margin-left:-3px!important;border-radius:50%!important;box-shadow:0 2px 8px rgba(0,0,0,.18),inset 0 0 0 5px var(--knob,#18c735)!important;transition:left .45s cubic-bezier(.3,1.3,.4,1),box-shadow .3s ease!important;z-index:4}
+.carbon17-pin.bad{--knob:#f0625a}.carbon17-pin.good{--knob:#18c735}
+.carbon17-pin::after{content:''!important;display:block!important;position:absolute;inset:-6px;border-radius:50%;box-shadow:0 0 0 2px var(--knob,#18c735);opacity:0;animation:knobPulse 2.4s ease-out infinite}
+@keyframes knobPulse{0%{opacity:.5;transform:scale(.8)}100%{opacity:0;transform:scale(1.35)}}
+.carbon17-pin.hop{animation:none!important}
+.carbon17-status{top:469px!important}
+@media (prefers-reduced-motion:reduce){.x-cb-glow,.carbon17-pin::after{animation:none!important}}
+.carbon17-faint-marker{margin-left:0!important}
+.carbon17-pin{margin-left:0!important}
+.carbon17-pin::after{top:-6px!important;left:-6px!important;right:-6px!important;bottom:-6px!important;width:auto!important;height:auto!important;margin:0!important;background:none!important;border:0!important;border-radius:50%!important;transform-origin:50% 50%!important}
+.carbon17-pin::before{display:none!important}
+/* going back: the leaving screen stays above the new screen's bubbles/guides until it has slid away */
+.x-ghost.x-hold,.x-ghost.x-pop-out{z-index:85!important}
