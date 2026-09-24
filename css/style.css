@@ -3884,3 +3884,7 @@ html,body,body *:not(.bc-num){font-family:var(--gs-font)!important}
 .carbon17-pin::before{display:none!important}
 /* going back: the leaving screen stays above the new screen's bubbles/guides until it has slid away */
 .x-ghost.x-hold,.x-ghost.x-pop-out{z-index:85!important}
+/* idea compose: no company chips, plain section titles */
+.x-csec .x-cchips{display:none!important}
+.x-cq b{display:none!important}
+.x-cq{gap:0}
