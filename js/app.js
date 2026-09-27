@@ -1247,7 +1247,7 @@ function showQRModal(activity){
  clearTimers();
  const d=document.createElement('div');d.className='modal-dim qr-dim';
  const card=document.createElement('div');card.className='qr-card';
- const title=document.createElement('div');title.className='qr-title';title.textContent=`${qrTitle[activity]||'실천'} QR 인증`;
+ const title=document.createElement('div');title.className='qr-title';title.textContent=`${({partial:'부분 채식',fullveg:'완전 채식',tumbler:'텀블러 사용',walk:'걷기',bike:'자전거',bus:'대중교통'})[activity]||'실천'} QR 인증`;
  const sub=document.createElement('div');sub.className='qr-sub';sub.textContent='매장 QR을 스캔해 실천을 인증해요';
  const qr=document.createElement('div');qr.className='qr-code';
  qr.innerHTML='<span></span><span></span><span></span>';
@@ -1324,7 +1324,7 @@ PAGES.route={title:v=>ROUTES[v.activity||'walk'].title,build(inner,v){
  const items=R.list.map((r,i)=>{const it=row(r[0],`${r[1]} · 약 ${r[2]}`,`<b class="x-save">-${r[3]}</b>`,'x-select'+(i===0?' on':''));it.dataset.i=i;inner.append(it);return it});
  enableTapThrough(inner.parentElement,'.x-select',c=>{sel=+c.dataset.i;items.forEach((x,i)=>x.classList.toggle('on',i===sel))});
  inner.append(el('p','x-note','경로를 따라 이동하면 거리가 자동으로 기록되고, 절감량이 오늘 실천에 더해져요.'));
-},footer(f,v){const b=el('button','x-cta','이 경로로 실천 시작');b.type='button';b.addEventListener('click',()=>{showToast('실천 기록을 시작했어요. 도착하면 자동으로 적립돼요.');setTimeout(back,700)});f.append(b)}};
+},footer(f,v){const b=el('button','x-cta','이 경로로 실천 시작');b.type='button';b.addEventListener('click',()=>{showToast('실천 기록을 시작했어요. 도착하면 자동으로 적립돼요.');setTimeout(()=>{back();setTimeout(()=>showGoalDone(),900)},700)});f.append(b)}};
 
 /* partner stores */
 const STORES={
@@ -2212,6 +2212,44 @@ const STAGE_EMO=['😵','😣','😟','🙂','😊','🥰'];
    const m=fig.querySelector('.carbon17-mascot-single.is-current');if(!m)return;m.classList.remove('x-cb-tap');void m.offsetWidth;m.classList.add('x-cb-tap');buzz(8);
    const emo=el('span','x-cb-emo',STAGE_EMO[idx()]);emo.style.left=(40+Math.random()*20)+'%';fig.append(emo);setTimeout(()=>emo.remove(),1100)});
 }}
+
+/* ===================== '오늘의 목표를 달성했어요' celebration ===================== */
+function showGoalDone(o={}){
+ const d=Object.assign({saved:4.7,debt:2.3,points:300,streak:13},o);
+ overlay.querySelector('.x-goal')?.remove();
+ const L=el('div','x-goal');
+ L.innerHTML=`<div class="x-goal-top"><div class="x-goal-rays"></div><img class="x-goal-art" alt=""><div class="x-goal-badge">오늘 목표 달성</div></div>
+ <div class="x-goal-body">
+  <h2>오늘의 목표를<br><em>달성</em>했어요!</h2>
+  <p>오늘 쓴 탄소 ${d.debt}kg을 모두 갚고<br><b>${(d.saved-d.debt).toFixed(1)}kg</b>을 더 줄였어요</p>
+  <div class="x-goal-meter"><div class="x-goal-track"><i></i><span class="x-goal-line"></span></div><div class="x-goal-legend"><span>0kg</span><span>오늘 몫 ${d.debt}kg</span><span class="g">${d.saved}kg</span></div></div>
+  <div class="x-goal-stats">
+   <div><small>줄인 탄소</small><strong class="n1">0</strong><em>kg</em></div>
+   <div><small>받을 포인트</small><strong class="n2">0</strong><em>P</em></div>
+   <div><small>연속 달성</small><strong class="n3">0</strong><em>일</em></div>
+  </div>
+  <div class="x-goal-team">${ico('info')}<span>팀 보너스 <b>+3%</b>가 포인트에 함께 적용돼요</span></div>
+ </div>`;
+ L.querySelector('.x-goal-art').src='assets/carbon21/mascot_319.png';
+ const foot=el('div','x-cfoot two');const brag=el('button','x-cta ghost','팀에 자랑하기');const get=el('button','x-cta',`${d.points}P 받기`);brag.type=get.type='button';foot.append(brag,get);L.append(foot);
+ overlay.append(L);confetti(34);buzz(20);
+ const ratio=Math.min(1,d.debt/d.saved);
+ requestAnimationFrame(()=>{L.querySelector('.x-goal-track i').style.width='100%';L.querySelector('.x-goal-line').style.left=(ratio*100)+'%'});
+ const roll=(elx,to,dec=0,dl=0)=>{const t0=performance.now()+dl;const st=now=>{const k=Math.max(0,Math.min(1,(now-t0)/900));const e=1-Math.pow(1-k,3);elx.textContent=(to*e).toFixed(dec);if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)};
+ roll(L.querySelector('.n1'),d.saved,1,250);roll(L.querySelector('.n2'),d.points,0,380);roll(L.querySelector('.n3'),d.streak,0,510);
+ let got=false;
+ get.addEventListener('click',()=>{
+   if(!got){got=true;gs.points+=d.points;gs.weekEarn=(gs.weekEarn||0)+d.points;
+     try{pointsHistory.unshift({date:'2026.08.07',title:'탄소 완납 포인트 지급',sub:'팀 보너스 +3% 포함',amt:d.points,icon:'pt'})}catch(_){}
+     get.textContent='홈으로';get.classList.add('x-got');showToast(`${d.points}P를 받았어요. 보유 ${fmt(gs.points)}P`);confetti(18);buzz(12);return}
+   closeLayer(L,'fade');if(view.type!=='home'){view={type:'home'};history=[];transitionMode='fade';render()}
+ });
+ brag.addEventListener('click',()=>{chatLogs.team.push({who:0,t:tcNow(),m:`오늘 목표 달성했어요! 🌱 탄소 ${d.saved}kg 줄였어요`});showToast('팀 채팅에 달성 소식을 보냈어요.');brag.disabled=true;brag.textContent='자랑했어요 👏'});
+}
+/* QR 인증 (prototype): tapping the QR code completes the check-in */
+{const _q=showQRModal;showQRModal=function(a){_q(a);const d=overlay.querySelector('.qr-dim,.modal-dim:last-child');const q=d?.querySelector('.qr-code,img,canvas,svg');
+ const card=d?.querySelector('.qr-card');if(!card)return;const hint=el('div','x-qr-hint','QR을 누르면 인증이 완료돼요 (시연)');card.insertBefore(hint,card.querySelector('.qr-close'));
+ card.addEventListener('click',e=>{if(e.target.closest('.qr-close')||card.dataset.done)return;card.dataset.done='1';d.remove();showToast('실천이 인증됐어요!');setTimeout(()=>showGoalDone({saved:3.1,points:300}),500)});}}
 
 render();
 })();
