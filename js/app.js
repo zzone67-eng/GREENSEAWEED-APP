@@ -2240,7 +2240,8 @@ function showGoalDone(o={}){
  let got=false;
  get.addEventListener('click',()=>{
    if(!got){got=true;gs.points+=d.points;gs.weekEarn=(gs.weekEarn||0)+d.points;
-     try{pointsHistory.unshift({date:'2026.08.07',title:'탄소 완납 포인트 지급',sub:'팀 보너스 +3% 포함',amt:d.points,icon:'pt'})}catch(_){}
+     const it={t:'오늘 목표 달성 포인트',s:'팀 보너스 +3% 포함',a:d.points};
+     if(pointsHistory[0]&&pointsHistory[0].date==='2026.08.07')pointsHistory[0].items.unshift(it);else pointsHistory.unshift({date:'2026.08.07',items:[it]});
      get.textContent='홈으로';get.classList.add('x-got');showToast(`${d.points}P를 받았어요. 보유 ${fmt(gs.points)}P`);confetti(18);buzz(12);return}
    closeLayer(L,'fade');if(view.type!=='home'){view={type:'home'};history=[];transitionMode='fade';render()}
  });
